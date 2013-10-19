@@ -1,0 +1,12 @@
+syntax: glob
+*.pyc
+*.pyo
+*.orig
+*.idea
+*.egg-info
+*~
+
+syntax: regexp
+build/
+dist/
+env/
