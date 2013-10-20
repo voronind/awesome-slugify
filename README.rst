@@ -2,35 +2,33 @@
 awesome-slugify
 ====================
 
-**Python slugify package**
+**Python slugify module**
 
-Pypi: https://pypi.python.org/pypi/awesome-slugify
-Github: https://github.com/dimka665/awesome-slugify
+| Pypi: https://pypi.python.org/pypi/awesome-slugify
+| Github: https://github.com/dimka665/awesome-slugify
 
 
 Install
 ==========
+.. code:: bash
+
     pip install awesome-slugify
 
 Use
 ==========
-    from slugify import slugify, slugify-unicode,
+.. code-block:: python
 
-    slugify('one kožušček')    # u'one-kozuscek'
+    from slugify import slugify, get_slugify, slugify_unicode, slugify_ru
+
+    slugify('one kožušček')                       # one-kozuscek
     slugify('one-=-two-%-three', separator='.')   # one.two.three
     slugify('one two three four', max_length=12)  # one-two-four
 
-    slugify('я ♥ щи')                             # ia-shchi
-    
-    from slugify import slugify_unicode
-    slugify_unicode('я ♥ щи')                     # я-щи    (sanitize only)
+    slugify('я ♥ борщ')                           # ia-borshch
+    slugify_unicode('я ♥ борщ')                   # я-борщ    (sanitize only)
 
-    from slugify import get_slugify
     my_slugify = get_slugify(pretranslate={'я': 'i', '♥': 'love', 'щ': 'sch'}, separator='.')
-    my_slugify('я ♥ щи')                         # i.love.schi  (custom translate)
+    my_slugify('я ♥ щи')                          # i.love.borsch  (custom translate)
     
-
-    
-
-
+    slugify_ru('я ♥ щи')                          # ya-borsch
     
