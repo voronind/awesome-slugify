@@ -46,7 +46,7 @@ Examples
 
     slugify('one kožušček')                       # one-kozuscek
     slugify('one-=-two-%-three', separator='.')   # one.two.three
-    slugify('one two Three', capitalize=True)     # One-two-three
+    slugify('one two Three', capitalize=True)     # One-two-Three
     slugify('one two three four', max_length=12)  # one-two-four   (12 chars)
 
     slugify('я ♥ борщ')                           # ia-borshch
