@@ -53,7 +53,7 @@ Examples
     slugify_unicode('я ♥ борщ')                   # я-борщ    (sanitize only)
 
     my_slugify = get_slugify(pretranslate={'я': 'i', '♥': 'love', 'щ': 'sch'}, separator='.')
-    my_slugify('я ♥ щи')                          # i.love.borsch  (custom translate)
+    my_slugify('я ♥ борщ')                        # i.love.borsch  (custom translate)
     
-    slugify_ru('я ♥ щи')                          # ya-borsch  (alternative russian translate)
+    slugify_ru('я ♥ борщ')                        # ya-borsch  (alternative russian translation)
     
