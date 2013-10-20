@@ -3,11 +3,11 @@
 from setuptools import setup
 import os
 
-version = '1.0'
+version = '1.0.1'
 
 name = 'awesome-slugify'
 package = 'slugify'
-description = 'Python slugify package'
+description = 'Python flexible slugify module'
 url = 'https://github.com/dimka665/awesome-slugify'
 author = 'Dmitry Voronin'
 author_email = 'dimka665@gmail.com'
@@ -40,7 +40,7 @@ setup(
     py_modules=['slugify/slugify'],
     install_requires=install_requires,
     classifiers=classifiers,
-    keywords='slugify,alternative russian slugify',
+    keywords='slugify,alternative russian slugify, flexible, awesome',
 )
 
 

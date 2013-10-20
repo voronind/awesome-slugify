@@ -4,7 +4,7 @@ import unittest
 from slugify import slugify, slugify_unicode, slugify_ru
 
 
-class TestSequenceFunctions(unittest.TestCase):
+class SlugifyTestCase(unittest.TestCase):
 
     def test_slugify_english(self):
         self.assertEqual(slugify('This % is a test ---'), 'This-is-a-test')
@@ -33,6 +33,13 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertEqual(slugify_ru('ёжик из щуки сварил уху'), 'ejik-iz-schyki-svaril-yhy')
         self.assertEqual(slugify_ru('Ах, Юля-Юля'), 'Ah-Ulya-Ulya')
 
+    def test_slugify_unicode(self):
+        self.assertEqual(slugify_unicode('-=Слово по-русски=-'), u'Слово-по-русски')
+        self.assertEqual(slugify_unicode('слово_по_русски'), u'слово-по-русски')
+
+
+class TruncateTestCase(unittest.TestCase):
+
     def test_truncate(self):
         self.assertEqual(slugify('one two three four', max_length=7), 'one-two')
         self.assertEqual(slugify('one two three four', max_length=8), 'one-two')
@@ -58,12 +65,11 @@ class TestSequenceFunctions(unittest.TestCase):
     def test_truncate_long_separator(self):
         self.assertEqual(slugify('one two three four', max_length=14, separator='...'), 'one...two')
 
+
+class OtherTestCase(unittest.TestCase):
+
     def test_capitalize(self):
         self.assertEqual(slugify('this Is A test', capitalize=True), 'This-Is-A-test')
-
-    def test_slugify_unicode(self):
-        self.assertEqual(slugify_unicode('-=Слово по-русски=-'), u'Слово-по-русски')
-        self.assertEqual(slugify_unicode('слово_по_русски'), u'слово-по-русски')
 
 
 if __name__ == '__main__':
