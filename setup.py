@@ -13,7 +13,7 @@ author = 'Dmitry Voronin'
 author_email = 'dimka665@gmail.com'
 license = 'BDSM'
 install_requires = [
-    'Unidecode==0.04.14',
+    'Unidecode',
     ]
 classifiers = [
     'Intended Audience :: Developers',
