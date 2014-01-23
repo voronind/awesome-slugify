@@ -1,7 +1,7 @@
 # coding: utf8
 
 import unittest
-from slugify import slugify, slugify_unicode, slugify_ru
+from slugify import slugify, slugify_unicode, slugify_ru, get_slugify
 
 
 class SlugifyTestCase(unittest.TestCase):
@@ -64,6 +64,25 @@ class TruncateTestCase(unittest.TestCase):
 
     def test_truncate_long_separator(self):
         self.assertEqual(slugify('one two three four', max_length=14, separator='...'), 'one...two')
+
+
+class PretranslateTestCase(unittest.TestCase):
+
+    def test_pretranslate(self):
+        ALT_TRANSLATION= {
+            u'ʘ‿ʘ': u'smiling',
+            u'ಠ_ಠ': u'disapproval',
+            u'♥‿♥': u'enamored',
+            u'♥': u'love',
+
+            u'(c)': u'copyright',
+            u'©': u'copyright',
+        }
+        slugify_emoji = get_slugify(pretranslate=ALT_TRANSLATION)
+        self.assertEqual(slugify_emoji(u'ʘ‿ʘ'), u'smiling')
+        self.assertEqual(slugify_emoji(u'ಠ_ಠ'), u'disapproval')
+        self.assertEqual(slugify_emoji(u'(c)'), u'copyright')
+        self.assertEqual(slugify_emoji(u'©'), u'copyright')
 
 
 class OtherTestCase(unittest.TestCase):
