@@ -49,11 +49,10 @@ Examples
     slugify('one two Three', capitalize=True)     # One-two-Three
     slugify('one two three four', max_length=12)  # one-two-four   (12 chars)
 
-    slugify('я ♥ борщ')                           # ia-borshch
-    slugify_unicode('я ♥ борщ')                   # я-борщ    (sanitize only)
+    slugify('Я ♥ борщ')                           # Ia-borshch  (standard translation)
+    slugify_ru('Я ♥ борщ')                        # Ya-borsch   (alternative russian translation)
+    slugify_unicode('Я ♥ борщ')                   # Я-борщ      (sanitize only)
 
     my_slugify = get_slugify(pretranslate={'я': 'i', '♥': 'love', 'щ': 'sch'}, separator='.')
-    my_slugify('я ♥ борщ')                        # i.love.borsch  (custom translate)
-    
-    slugify_ru('я ♥ борщ')                        # ya-borsch  (alternative russian translation)
-    
+    my_slugify('Я ♥ борщ')                        # I.love.borsch  (custom translate)
+
