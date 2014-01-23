@@ -1,4 +1,4 @@
-# coding: utf8
+# coding=utf8
 
 import re
 from unidecode import unidecode
@@ -23,7 +23,9 @@ def get_pretranslate(func_dict_none):
         translate_dict = func_dict_none
         # add upper letters
         for letter, translation in translate_dict.items():
-            translate_dict[letter.upper()] = translation.capitalize()
+            letter_upper = letter.upper()
+            if letter_upper != letter and letter_upper not in translate_dict:
+                translate_dict[letter_upper] = translation.capitalize()
 
         PRETRANSLATE = ur'({})'.format(u'|'.join(translate_dict.keys()))
         PRETRANSLATE = re.compile(PRETRANSLATE, re.UNICODE)
