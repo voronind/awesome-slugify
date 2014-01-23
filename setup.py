@@ -3,7 +3,7 @@
 from setuptools import setup
 import os
 
-version = '1.0.2'
+version = '1.1'
 
 name = 'awesome-slugify'
 package = 'slugify'
@@ -11,15 +11,17 @@ description = 'Python flexible slugify module'
 url = 'https://github.com/dimka665/awesome-slugify'
 author = 'Dmitry Voronin'
 author_email = 'dimka665@gmail.com'
-license = 'BDSM'
+license = 'MIT'
 install_requires = [
     'Unidecode',
     ]
 classifiers = [
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: BSD License',
-    'Operating System :: POSIX',
+    'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.3',
 ]
 
 
