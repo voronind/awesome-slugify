@@ -9,4 +9,3 @@ syntax: glob
 syntax: regexp
 build/
 dist/
-env/
