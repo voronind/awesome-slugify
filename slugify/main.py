@@ -1,6 +1,7 @@
 # coding=utf8
 
 import re
+import sys
 from unidecode import unidecode
 
 ALT_CYRILLIC = {
@@ -14,15 +15,19 @@ ALT_CYRILLIC = {
 }
 
 #UNWANTED_CHARS_RE = re.compile(r'[^A-Za-z0-9]+')
-UNWANTED_CHARS = re.compile(ur'[_\W]+', re.UNICODE)  # all except letters and digits
+UNWANTED_CHARS = re.compile(u'[_\W]+', re.UNICODE)  # all except letters and digits
 SEPARATOR = u'-'
+
+
+if sys.version_info > (3, 0):
+    unicode = str
 
 
 def get_pretranslate(func_dict_none):
     if isinstance(func_dict_none, dict):
         translate_dict = func_dict_none
         # add upper letters
-        for letter, translation in translate_dict.items():
+        for letter, translation in list(translate_dict.items()):
             letter_upper = letter.upper()
             if letter_upper != letter and letter_upper not in translate_dict:
                 translate_dict[letter_upper] = translation.capitalize()
@@ -41,7 +46,7 @@ def get_pretranslate(func_dict_none):
 
 def translate(text):
     text = unidecode(text)  # слово -> slovo, returns <type 'str'>
-    if type(text) is not unicode:
+    if not isinstance(text, unicode):
         text = unicode(text, 'utf8', 'ignore')
 
     #text = unicodedata.normalize('NFKD', text)  # split umlauts and so on
@@ -49,7 +54,7 @@ def translate(text):
 
 
 def sanitize(text):
-    text = text.replace("'", "").strip()  # remove '
+    text = text.replace("'", '').strip()  # remove '
     words = filter(None, UNWANTED_CHARS.split(text))  # split by unwanted characters
     return words
 
@@ -59,7 +64,8 @@ def join_words(words, max_length=None, separator=SEPARATOR):
     if not max_length:
         return separator.join(words)
 
-    text = words.pop(0)
+    words = iter(words)   # Python 2 compatible
+    text = next(words)    # text = words.pop(0)
     for word in words:
         if len(text + separator + word) <= max_length:
             text += separator + word
@@ -72,7 +78,7 @@ def get_slugify(pretranslate=None, translate=translate, max_length=None, separat
     pretranslate = get_pretranslate(pretranslate)
 
     def slugify(text, max_length=max_length, separator=separator, capitalize=capitalize):
-        if type(text) is not unicode:
+        if not isinstance(text, unicode):
             text = unicode(text, 'utf8', 'ignore')
 
         if pretranslate:
