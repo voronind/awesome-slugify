@@ -27,7 +27,7 @@ def get_pretranslate(func_dict_none):
             if letter_upper != letter and letter_upper not in translate_dict:
                 translate_dict[letter_upper] = translation.capitalize()
 
-        PRETRANSLATE = ur'({})'.format(u'|'.join(translate_dict.keys()))
+        PRETRANSLATE = u'({})'.format('|'.join(map(re.escape, translate_dict)))
         PRETRANSLATE = re.compile(PRETRANSLATE, re.UNICODE)
 
         def pretranslate(text):
