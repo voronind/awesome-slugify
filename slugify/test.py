@@ -90,6 +90,11 @@ class OtherTestCase(unittest.TestCase):
     def test_capitalize(self):
         self.assertEqual(slugify('this Is A test', capitalize=True), 'This-Is-A-test')
 
+    def test_custom_unwanted_chars(self):
+        import re
+        self.assertEqual(slugify('this_is a test', unwanted_chars=re.compile(u'[\W]+', re.UNICODE)), 'this_is-a-test')
+        self.assertEqual(slugify('this_is a test', separator='_', unwanted_chars=re.compile(u'[\W]+', re.UNICODE)), 'this_is_a_test')
+
 
 if __name__ == '__main__':
     unittest.main()
