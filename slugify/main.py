@@ -53,9 +53,9 @@ def translate(text):
     return text
 
 
-def sanitize(text):
+def sanitize(text, unwanted_chars):
     text = text.replace("'", '').strip()  # remove '
-    words = filter(None, UNWANTED_CHARS.split(text))  # split by unwanted characters
+    words = filter(None, unwanted_chars.split(text))  # split by unwanted characters
     return words
 
 
@@ -73,11 +73,11 @@ def join_words(words, max_length=None, separator=SEPARATOR):
     return text[:max_length]
 
 
-def get_slugify(pretranslate=None, translate=translate, max_length=None, separator=SEPARATOR, capitalize=False):
+def get_slugify(pretranslate=None, translate=translate, max_length=None, separator=SEPARATOR, capitalize=False, unwanted_chars=UNWANTED_CHARS):
 
     pretranslate = get_pretranslate(pretranslate)
 
-    def slugify(text, max_length=max_length, separator=separator, capitalize=capitalize):
+    def slugify(text, max_length=max_length, separator=separator, capitalize=capitalize, unwanted_chars=unwanted_chars):
         if not isinstance(text, unicode):
             text = unicode(text, 'utf8', 'ignore')
 
@@ -85,7 +85,7 @@ def get_slugify(pretranslate=None, translate=translate, max_length=None, separat
             text = pretranslate(text)
         if translate:
             text = translate(text)
-        words = sanitize(text)
+        words = sanitize(text, unwanted_chars)
         text = join_words(words, max_length, separator)
 
         if capitalize:
