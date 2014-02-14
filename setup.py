@@ -11,12 +11,12 @@ description = 'Python flexible slugify module'
 url = 'https://github.com/dimka665/awesome-slugify'
 author = 'Dmitry Voronin'
 author_email = 'dimka665@gmail.com'
-license = 'MIT'
+license = 'GNU GPLv3'
 install_requires = [
     'Unidecode',
     ]
 classifiers = [
-    'License :: OSI Approved :: MIT License',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Programming Language :: Python',
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.6',
