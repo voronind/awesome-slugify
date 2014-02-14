@@ -14,11 +14,7 @@ ALT_CYRILLIC = {
     u'я': u'ya',   # instead of 'ia'
 }
 
-#UNWANTED_CHARS_RE = re.compile(r'[^A-Za-z0-9]+')
-UNWANTED_CHARS = re.compile(u'[_\W]+', re.UNICODE)  # all except letters and digits
-SEPARATOR = u'-'
-
-
+# Python 3 support
 if sys.version_info > (3, 0):
     unicode = str
 
@@ -53,13 +49,27 @@ def translate(text):
     return text
 
 
-def sanitize(text, unwanted_chars):
-    text = text.replace("'", '').strip()  # remove '
-    words = filter(None, unwanted_chars.split(text))  # split by unwanted characters
-    return words
+def get_sanitize(safe_chars):
+
+    apostrophe_is_not_safe = "'" not in safe_chars
+
+    if '_' in safe_chars:
+        unwanted_chars_pattern_template = u'{unwanted_char_pattern}+'
+    else:
+        unwanted_chars_pattern_template = u'(?:{unwanted_char_pattern}|_)+'
+    unwanted_char_pattern = u'[^\w{safe_chars}]'.format(safe_chars=re.escape(safe_chars))
+    unwanted_chars_pattern = unwanted_chars_pattern_template.format(unwanted_char_pattern=unwanted_char_pattern)
+    unwanted_chars_re = re.compile(unwanted_chars_pattern, re.UNICODE)
+
+    def sanitize(text):
+        if apostrophe_is_not_safe:
+            text = text.replace("'", '').strip()  # remove '
+        return filter(None, unwanted_chars_re.split(text))  # split by unwanted characters
+
+    return sanitize
 
 
-def join_words(words, max_length=None, separator=SEPARATOR):
+def join_words(words, separator, max_length=None):
 
     if not max_length:
         return separator.join(words)
@@ -73,11 +83,13 @@ def join_words(words, max_length=None, separator=SEPARATOR):
     return text[:max_length]
 
 
-def get_slugify(pretranslate=None, translate=translate, max_length=None, separator=SEPARATOR, capitalize=False, unwanted_chars=UNWANTED_CHARS):
+def get_slugify(pretranslate=None, translate=translate, safe_chars='',
+                max_length=None, separator=u'-', capitalize=False):
 
     pretranslate = get_pretranslate(pretranslate)
+    sanitize = get_sanitize(safe_chars)
 
-    def slugify(text, max_length=max_length, separator=separator, capitalize=capitalize, unwanted_chars=unwanted_chars):
+    def slugify(text, max_length=max_length, separator=separator, capitalize=capitalize):
         if not isinstance(text, unicode):
             text = unicode(text, 'utf8', 'ignore')
 
@@ -85,8 +97,8 @@ def get_slugify(pretranslate=None, translate=translate, max_length=None, separat
             text = pretranslate(text)
         if translate:
             text = translate(text)
-        words = sanitize(text, unwanted_chars)
-        text = join_words(words, max_length, separator)
+        words = sanitize(text)
+        text = join_words(words, separator, max_length)
 
         if capitalize:
             text = text[0].upper() + text[1:]
