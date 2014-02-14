@@ -24,7 +24,7 @@ slugify
     text                  # text for translate. position arg
     max_length = None     # output string max length
     separator = '-'       # separator string
-    capitalize = False    # upper first letter if True
+    capitalize = False    # if True upper first letter
 
 Retuns translated text.
 
@@ -34,6 +34,7 @@ get_slugify
 
     pretranslate = None               # function or dict for replace before translation
     translate = unidecode.unidecode   # function for slugifying or None
+    safe_chars = ''                   # additional safe chars
     # + slugify's keyword args
     
 Returns slugify function.
