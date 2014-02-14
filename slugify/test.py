@@ -91,8 +91,8 @@ class OtherTestCase(unittest.TestCase):
         self.assertEqual(slugify('this Is A test', capitalize=True), 'This-Is-A-test')
 
     def test_safe_chars(self):
-        filename_slugify = get_slugify(safe_chars='_.', separator='')
-        self.assertEqual(filename_slugify(u'Дrаft_2*.txt'), u'Draft_2.txt')
+        filename_slugify = get_slugify(safe_chars='-_.', separator='_')
+        self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_2.txt')
 
 
 if __name__ == '__main__':
