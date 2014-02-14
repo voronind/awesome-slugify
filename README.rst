@@ -42,16 +42,21 @@ Examples
 ==========
 .. code-block:: python
 
-    from slugify import slugify, get_slugify, slugify_unicode, slugify_ru
-
+    from slugify import slugify, slugify_unicode, slugify_ru
+    from slugify import get_slugify
+    
+    
     slugify('one kožušček')                       # one-kozuscek
-    slugify('one-=-two-%-three', separator='.')   # one.two.three
-    slugify('one two Three', capitalize=True)     # One-two-Three
+    slugify('one two three', separator='.')       # one.two.three
     slugify('one two three four', max_length=12)  # one-two-four   (12 chars)
+    slugify('one TWO', capitalize=True)           # One-TWO
 
     slugify('Я ♥ борщ')                           # Ia-borshch  (standard translation)
     slugify_ru('Я ♥ борщ')                        # Ya-borsch   (alternative russian translation)
     slugify_unicode('Я ♥ борщ')                   # Я-борщ      (sanitize only)
+    
+    filename_slugify = get_slugify(safe_chars='-_.', separator='_')
+    filename_slugify(u'Дrаft №2.txt')             # Draft_2.txt
 
     my_slugify = get_slugify(pretranslate={'я': 'i', '♥': 'love', 'щ': 'sch'}, separator='.')
     my_slugify('Я ♥ борщ')                        # I.love.borsch  (custom translate)
