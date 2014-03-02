@@ -84,6 +84,9 @@ class PretranslateTestCase(unittest.TestCase):
         self.assertEqual(slugify_emoji(u'(c)'), u'copyright')
         self.assertEqual(slugify_emoji(u'©'), u'copyright')
 
+    def test_wrong_argument_type(self):
+        self.assertRaises(ValueError, lambda: get_slugify(pretranslate={1, 2}))
+
 
 class OtherTestCase(unittest.TestCase):
 

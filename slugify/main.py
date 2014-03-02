@@ -36,8 +36,15 @@ def get_pretranslate(func_dict_none):
             return PRETRANSLATE.sub(lambda m: translate_dict[m.group(1)], text)
 
         return pretranslate
-    else:
+
+    elif callable(func_dict_none):
         return func_dict_none
+    elif func_dict_none is None:
+        return None
+    else:
+        pretranslate_type_name = func_dict_none.__class__.__name__
+        error_message = u"Keyword argument 'pretranslate' must be dict, None or callable. Not {type}".format(type=pretranslate_type_name)
+        raise ValueError(error_message)
 
 
 def translate(text):
