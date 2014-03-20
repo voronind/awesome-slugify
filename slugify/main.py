@@ -78,7 +78,7 @@ def get_sanitize(safe_chars):
 
 def join_words(words, separator, max_length=None):
 
-    if not max_length:
+    if not max_length or not words:
         return separator.join(words)
 
     words = iter(words)   # Python 2 compatible

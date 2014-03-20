@@ -47,6 +47,8 @@ class TruncateTestCase(unittest.TestCase):
         self.assertEqual(slugify('one two three four', max_length=13), 'one-two-three')
         self.assertEqual(slugify('one two three four', max_length=14), 'one-two-three')
 
+        self.assertEqual(slugify('', max_length=10), '')
+
     def test_truncate_short(self):
         self.assertEqual(slugify('dlinnoeslovo', max_length=7), 'dlinnoe')
         self.assertEqual(slugify('dlinnoeslovo и ещё слово', max_length=11), 'dlinnoeslov')
