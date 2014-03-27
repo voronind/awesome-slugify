@@ -3,7 +3,7 @@
 from setuptools import setup
 import os
 
-version = '1.2.2'
+version = '1.2.3'
 
 name = 'awesome-slugify'
 package = 'slugify'
@@ -34,6 +34,7 @@ def get_packages(package):
 setup(
     name=name,
     version=version,
+
     url=url,
     license=license,
     description=description,

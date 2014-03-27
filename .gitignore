@@ -1,9 +1,11 @@
+.tox/
+.idea/
+
 *.pyc
 *.pyo
 *.orig
-*.idea
 *.egg-info
 *~
 
-build/*
-dist/*
+build/
+dist/

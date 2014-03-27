@@ -78,11 +78,15 @@ def get_sanitize(safe_chars):
 
 def join_words(words, separator, max_length=None):
 
-    if not max_length or not words:
+    if not max_length:
         return separator.join(words)
 
-    words = iter(words)   # Python 2 compatible
-    text = next(words)    # text = words.pop(0)
+    words = iter(words)   # List to Generator
+    try:
+        text = next(words)
+    except StopIteration:
+        return u''
+
     for word in words:
         if len(text + separator + word) <= max_length:
             text += separator + word
