@@ -111,7 +111,7 @@ def get_slugify(pretranslate=None, translate=translate, safe_chars='',
         words = sanitize(text)
         text = join_words(words, separator, max_length)
 
-        if capitalize:
+        if capitalize and text:
             text = text[0].upper() + text[1:]
 
         return text

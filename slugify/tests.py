@@ -47,6 +47,7 @@ class TruncateTestCase(unittest.TestCase):
         self.assertEqual(slugify('one two three four', max_length=13), 'one-two-three')
         self.assertEqual(slugify('one two three four', max_length=14), 'one-two-three')
 
+    def test_truncate_on_empty(self):
         self.assertEqual(slugify('', max_length=10), '')
 
     def test_truncate_short(self):
@@ -94,6 +95,9 @@ class OtherTestCase(unittest.TestCase):
 
     def test_capitalize(self):
         self.assertEqual(slugify('this Is A test', capitalize=True), 'This-Is-A-test')
+
+    def test_capitalize_on_empty(self):
+        self.assertEqual(slugify('', capitalize=True), '')
 
     def test_safe_chars(self):
         filename_slugify = get_slugify(safe_chars='-_.', separator='_')
