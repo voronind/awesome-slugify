@@ -1,7 +1,10 @@
-# coding: utf8
+# coding=utf8
 
 import unittest
-from slugify import slugify, slugify_unicode, slugify_ru, get_slugify
+
+from slugify import Slugify
+from slugify import slugify, slugify_unicode, slugify_ru
+from slugify import get_slugify
 
 
 class SlugifyTestCase(unittest.TestCase):
@@ -81,14 +84,14 @@ class PretranslateTestCase(unittest.TestCase):
             u'(c)': u'copyright',
             u'©': u'copyright',
         }
-        slugify_emoji = get_slugify(pretranslate=ALT_TRANSLATION)
+        slugify_emoji = Slugify(pretranslate=ALT_TRANSLATION)
         self.assertEqual(slugify_emoji(u'ʘ‿ʘ'), u'smiling')
         self.assertEqual(slugify_emoji(u'ಠ_ಠ'), u'disapproval')
         self.assertEqual(slugify_emoji(u'(c)'), u'copyright')
         self.assertEqual(slugify_emoji(u'©'), u'copyright')
 
     def test_wrong_argument_type(self):
-        self.assertRaises(ValueError, lambda: get_slugify(pretranslate={1, 2}))
+        self.assertRaises(ValueError, lambda: Slugify(pretranslate={1, 2}))
 
 
 class OtherTestCase(unittest.TestCase):
@@ -100,12 +103,21 @@ class OtherTestCase(unittest.TestCase):
         self.assertEqual(slugify('', capitalize=True), '')
 
     def test_safe_chars(self):
-        filename_slugify = get_slugify(safe_chars='-_.', separator='_')
+        filename_slugify = Slugify(safe_chars='-_.', separator='_')
         self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_2.txt')
+
+
+class DeprecationTestCase(unittest.TestCase):
+
+    def test_deprecated_get_slugify(self):
+        import warnings
+
+        with warnings.catch_warnings(record=True) as warning:
+            warnings.simplefilter('once')
+
+            slugify = get_slugify()
+            self.assertIn("'slugify.get_slugify' is deprecated", str(warning[-1].message))
 
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
