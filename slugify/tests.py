@@ -90,6 +90,13 @@ class PretranslateTestCase(unittest.TestCase):
         self.assertEqual(slugify_emoji(u'(c)'), u'copyright')
         self.assertEqual(slugify_emoji(u'©'), u'copyright')
 
+    def test_pretranslate_lambda(self):
+        slugify_reverse = Slugify(pretranslate=lambda value: value[::-1])
+        self.assertEqual(
+            slugify_reverse('slug'),
+            'guls'
+        )
+
     def test_wrong_argument_type(self):
         self.assertRaises(ValueError, lambda: Slugify(pretranslate={1, 2}))
 

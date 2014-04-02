@@ -69,7 +69,7 @@ class Slugify(object):
         elif pretranslate is None:
             pretranslate = lambda text: text
 
-        else:
+        elif not hasattr(pretranslate, '__call__'):
             error_message = u"Keyword argument 'pretranslate' must be dict, None or callable. Not {0.__class__.__name__}".format(pretranslate)
             raise ValueError(error_message)
 
