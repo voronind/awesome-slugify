@@ -30,7 +30,6 @@ def join_words(words, separator, max_length=None):
 
     return text[:max_length]
 
-
 # uppercase letters to translate to uppercase letters, NOT camelcase
 UPPER_TO_UPPER_LETTERS_RE = \
     '''
@@ -96,7 +95,7 @@ class Slugify(object):
         elif pretranslate is None:
             pretranslate = lambda text: text
 
-        else:
+        elif not callable(pretranslate):
             error_message = u"Keyword argument 'pretranslate' must be dict, None or callable. Not {0.__class__.__name__}".format(pretranslate)
             raise ValueError(error_message)
 
