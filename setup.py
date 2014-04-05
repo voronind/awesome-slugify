@@ -4,16 +4,16 @@ from setuptools import setup, find_packages
 
 setup(
     name='awesome-slugify',
-    version='1.3',
+    version='1.3.1',
 
     author='Dmitry Voronin',
     author_email='dimka665@gmail.com',
 
     url='https://github.com/dimka665/awesome-slugify',
-    description='Python flexible slugify module',
+    description='Python flexible slugify function',
 
     packages=find_packages(),
-    install_requires='Unidecode',
+    install_requires=['regex', 'Unidecode'],
 
     license='GNU GPLv3',
     classifiers=[
@@ -24,9 +24,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
     ],
-    keywords='slugify alternative russian slugify flexible awesome',
+    keywords='slugify alternative russian german translation flexible awesome',
 )
-
-
-

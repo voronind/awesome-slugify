@@ -2,20 +2,13 @@
 
 import re
 import sys
-
+import regex
 from unidecode import unidecode
 
-ALT_CYRILLIC = {
-    u'ё': u'e',    # instead of 'io' / 'yo'
-    u'ж': u'j',    # instead of 'zh'
-    u'у': u'y',    # instead of 'u'
-    u'х': u'h',    # instead of 'kh'
-    u'щ': u'sch',  # instead of 'shch'
-    u'ю': u'u',    # instead of 'iu' / 'yu'
-    u'я': u'ya',   # instead of 'ia'
-}
+# turn on PCRE version of regex module, incompatible with standard re module
+regex.DEFAULT_VERSION = regex.V1
 
-# Python 3 support
+# for Python 2 support
 if sys.version_info > (3, 0):
     unicode = str
 
@@ -38,11 +31,40 @@ def join_words(words, separator, max_length=None):
     return text[:max_length]
 
 
+# uppercase letters to translate to uppercase letters, NOT camelcase
+UPPER_TO_UPPER_LETTERS_RE = \
+    '''
+    (
+            \p{Uppercase_Letter} {2,}                          # 2 or more adjacent letters - UP always
+        |
+            \p{Uppercase_Letter}                               # target one uppercase letter, then
+                (?=
+                    [^\p{Lowercase_Letter}…\p{Term}--,،﹐，]+    # not chars breaks possible UP (…abc.?!:;)
+                    \p{Uppercase_Letter} {2}                   # and 2 uppercase letters
+                )
+        |
+            (?<=
+                \p{Uppercase_Letter} {2}                       # 2 uppercase letters
+                [^\p{Lowercase_Letter}…\p{Term}--,،﹐，]+       # not chars breaks possible UP (…abc.?!:;), then
+            )
+            \p{Uppercase_Letter}                               # target one uppercase letter, then
+            (?!
+                    \p{Lowercase_Letter}                       # not lowercase letter
+                |
+                    […\p{Term}--,،﹐，]\p{Uppercase_Letter}      # and not dot (.?…!:;) with uppercase letter
+            )
+    )
+    '''
+
+
 class Slugify(object):
 
-    def __init__(self, pretranslate=None, translate=unidecode, safe_chars='',
-            max_length=None, separator=u'-', capitalize=False):
+    upper_to_upper_letters_re = regex.compile(UPPER_TO_UPPER_LETTERS_RE, regex.UNICODE | regex.VERBOSE)
 
+    def __init__(self, pretranslate=None, translate=unidecode, safe_chars='',
+            to_lower=False, max_length=None, separator=u'-', capitalize=False):
+
+        self.to_lower = to_lower
         self.max_length = max_length
         self.separator = separator
         self.capitalize = capitalize
@@ -51,25 +73,30 @@ class Slugify(object):
         self.translate = translate
         self.safe_chars = safe_chars
 
+    def pretranslate_dict_to_function(self, convert_dict):
+
+        # add uppercase letters
+        for letter, translation in list(convert_dict.items()):
+            letter_upper = letter.upper()
+            if letter_upper != letter and letter_upper not in convert_dict:
+                convert_dict[letter_upper] = translation.capitalize()
+
+        self.convert_dict = convert_dict
+
+        PRETRANSLATE = u'({0})'.format('|'.join(map(re.escape, convert_dict)))
+        PRETRANSLATE = re.compile(PRETRANSLATE, re.UNICODE)
+
+        # translate some letters before translating
+        return lambda text: PRETRANSLATE.sub(lambda m: convert_dict[m.group(1)], text)
+
     def set_pretranslate(self, pretranslate):
         if isinstance(pretranslate, dict):
-            pretranslate_dict = pretranslate
-            # add upper letters
-            for letter, translation in list(pretranslate_dict.items()):
-                letter_upper = letter.upper()
-                if letter_upper != letter and letter_upper not in pretranslate_dict:
-                    pretranslate_dict[letter_upper] = translation.capitalize()
-
-            PRETRANSLATE = u'({0})'.format('|'.join(map(re.escape, pretranslate_dict)))
-            PRETRANSLATE = re.compile(PRETRANSLATE, re.UNICODE)
-
-            # translate some letters before translating
-            pretranslate = lambda text: PRETRANSLATE.sub(lambda m: pretranslate_dict[m.group(1)], text)
+            pretranslate = self.pretranslate_dict_to_function(pretranslate)
 
         elif pretranslate is None:
             pretranslate = lambda text: text
 
-        else:
+        elif not callable(pretranslate):
             error_message = u"Keyword argument 'pretranslate' must be dict, None or callable. Not {0.__class__.__name__}".format(pretranslate)
             raise ValueError(error_message)
 
@@ -112,35 +139,48 @@ class Slugify(object):
         if not isinstance(text, unicode):
             text = unicode(text, 'utf8', 'ignore')
 
-        text = self._pretranslate(text)
-        text = self._translate(text)
+        if kwargs.get('to_lower', self.to_lower):
+            text = self._pretranslate(text.lower())
+            text = self._translate(text)
 
-        if not isinstance(text, unicode):
-            text = unicode(text, 'utf8', 'ignore')
+        else:
+            text_parts = self.upper_to_upper_letters_re.split(text)
+
+            for position, text_part in enumerate(text_parts):
+                text_part = self._pretranslate(text_part)
+                text_part = self._translate(text_part)
+                if position % 2:
+                    text_part = text_part.upper()
+
+                text_parts[position] = text_part
+
+            text = ''.join(text_parts)
+
+        # if not isinstance(text, unicode):
+        #     text = unicode(text, 'utf8', 'ignore')
 
         words = self.sanitize(text)
         text = join_words(words, separator, max_length)
 
-        if kwargs.get('capitalize', self.capitalize) and text:
+        if text and kwargs.get('capitalize', self.capitalize):
             text = text[0].upper() + text[1:]
 
         return text
 
 
-slugify = Slugify()
-slugify_ru = Slugify(pretranslate=ALT_CYRILLIC)
-slugify_unicode = Slugify(translate=None)
+# \p{SB=AT} = '.․﹒．'
+# \p{SB=ST} = '!?՜՞։؟۔܀܁܂߹।॥၊။።፧፨᙮᜵᜶‼‽⁇⁈⁉⸮。꓿꘎꘏꤯﹖﹗！？｡'
+# \p{Term}  = '!,.:;?;·։׃،؛؟۔܀܁܂܃܄܅܆܇܈܉܊܌߸߹।॥๚๛༈།༎༏༐༑༒၊။፡።፣፤፥፦፧፨᙭᙮᛫᛬᛭។៕៖៚‼‽⁇⁈⁉⸮、。꓾꓿꘍꘎꘏꤯﹐﹑﹒﹔﹕﹖﹗！，．：；？｡､'
+# \p{Sterm} = '! .  ?՜՞։؟܀   ܁     ܂߹।॥၊။               ።፧፨  ᙮᜵᜶        ‼‽⁇⁈⁉⸮ 。 ꓿ ꘎꘏꤯﹒     ﹖﹗！．    ？｡'
 
-# Legacy code
-def deprecate_init(Klass):
-    class NewKlass(Klass):
-        def __init__(self, *args, **kwargs):
-            import warnings
-            warnings.simplefilter('once')
-            warnings.warn("'slugify.get_slugify' is deprecated; use 'slugify.Slugify' instead.",
-                          DeprecationWarning, stacklevel=2)
-            super(NewKlass, self).__init__(*args, **kwargs)
-    return NewKlass
+# \p{SB=AT} = .
+# \p{SB=ST} =   ! ?
+# \p{Term}  = . ! ? , : ;
+# \p{Sterm} = . ! ?
 
-# get_slugify was deprecated in 2014, march 31
-get_slugify = deprecate_init(Slugify)
+# \u002c - Latin comma
+# \u060c - Arabic comma
+# \ufe50 - Small comma
+# \uff0c - Fullwidth comma
+
+# […\p{Term}--,،﹐，] - ellipsis + Terms - commas
