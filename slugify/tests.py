@@ -30,7 +30,6 @@ class SlugifyTestCase(unittest.TestCase):
         self.assertEqual(slugify('Транслитерирует и русский'), 'Transliteriruet-i-russkii')
         self.assertEqual(slugify('ёжик из щуки сварил уху'), 'iozhik-iz-shchuki-svaril-ukhu')
         self.assertEqual(slugify('Ах, Юля-Юля'), 'Akh-Iulia-Iulia')
-        self.assertEqual(slugify('молотьба'), 'molotba')
 
     def test_slugify_ru(self):
         self.assertEqual(slugify_ru('Компьютер'), 'Komputer')
@@ -126,6 +125,28 @@ class TruncateTestCase(unittest.TestCase):
 
     def test_truncate_long_separator(self):
         self.assertEqual(slugify('one two three four', max_length=14, separator='...'), 'one...two')
+
+
+class PretranslateTestCase(unittest.TestCase):
+
+    def test_pretranslate(self):
+        ALT_TRANSLATION= {
+            u'ʘ‿ʘ': u'smiling',
+            u'ಠ_ಠ': u'disapproval',
+            u'♥‿♥': u'enamored',
+            u'♥': u'love',
+
+            u'(c)': u'copyright',
+            u'©': u'copyright',
+        }
+        slugify_emoji = Slugify(pretranslate=ALT_TRANSLATION)
+        self.assertEqual(slugify_emoji(u'ʘ‿ʘ'), u'smiling')
+        self.assertEqual(slugify_emoji(u'ಠ_ಠ'), u'disapproval')
+        self.assertEqual(slugify_emoji(u'(c)'), u'copyright')
+        self.assertEqual(slugify_emoji(u'©'), u'copyright')
+
+    def test_wrong_argument_type(self):
+        self.assertRaises(ValueError, lambda: Slugify(pretranslate={1, 2}))
 
 
 class OtherTestCase(unittest.TestCase):
