@@ -112,16 +112,9 @@ class Slugify(object):
     translate = property(fset=set_translate)
 
     def set_safe_chars(self, safe_chars):
+        unwanted_chars_re = u'[^\p{{AlNum}}{safe_chars}]+'.format(safe_chars=regex.escape(safe_chars))
+        self.unwanted_chars_re = regex.compile(unwanted_chars_re, regex.UNICODE)
         self.apostrophe_is_not_safe = "'" not in safe_chars
-
-        if '_' in safe_chars:
-            unwanted_chars_pattern_template = u'{unwanted_char_pattern}+'
-        else:
-            unwanted_chars_pattern_template = u'(?:{unwanted_char_pattern}|_)+'
-
-        unwanted_char_pattern = u'[^\w{safe_chars}]'.format(safe_chars=re.escape(safe_chars))
-        unwanted_chars_pattern = unwanted_chars_pattern_template.format(unwanted_char_pattern=unwanted_char_pattern)
-        self.unwanted_chars_re = re.compile(unwanted_chars_pattern, re.UNICODE)
 
     safe_chars = property(fset=set_safe_chars)
 
@@ -139,7 +132,8 @@ class Slugify(object):
             text = unicode(text, 'utf8', 'ignore')
 
         if kwargs.get('to_lower', self.to_lower):
-            text = self._pretranslate(text.lower())
+            text = text.lower()
+            text = self._pretranslate(text)
             text = self._translate(text)
 
         else:

@@ -42,6 +42,22 @@ class SlugifyTestCase(unittest.TestCase):
         self.assertEqual(slugify_unicode('слово_по_русски'), u'слово-по-русски')
 
 
+class ToLowerTestCase(unittest.TestCase):
+
+    def test_to_lower(self):
+        self.assertEqual(slugify('Test TO lower', to_lower=True), 'test-to-lower')
+
+    def test_to_lower_arg(self):
+        slugify = Slugify()
+        slugify.to_lower = True
+
+        self.assertEqual(slugify('Test TO lower'), 'test-to-lower')
+        self.assertEqual(slugify('Test TO lower', to_lower=False), 'Test-TO-lower')
+
+    def test_to_lower_with_capitalize(self):
+        self.assertEqual(slugify('Test TO lower', to_lower=True, capitalize=True), 'Test-to-lower')
+
+
 class UpperTestCase(unittest.TestCase):
     def test_full_upper(self):
         self.assertEqual(slugify_ru('ЯНДЕКС'), 'YANDEKS')
@@ -100,6 +116,24 @@ class PretranslateTestCase(unittest.TestCase):
         self.assertRaises(ValueError, lambda: Slugify(pretranslate={1, 2}))
 
 
+class SanitizeTestCase(unittest.TestCase):
+    def test_sanitize(self):
+        self.assertEqual(slugify('test_sanitize'), 'test-sanitize')
+
+    def test_safe_chars(self):
+        slugify = Slugify()
+
+        slugify.safe_chars = '_'
+        self.assertEqual(slugify('test_sanitize'), 'test_sanitize')
+
+        slugify.safe_chars = "'"
+        self.assertEqual(slugify('Конь-Огонь'), "Kon'-Ogon'")
+
+    def test_filename_slugify(self):
+        filename_slugify = Slugify(safe_chars='-_.', separator='_')
+        self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_2.txt')
+
+
 class TruncateTestCase(unittest.TestCase):
 
     def test_truncate(self):
@@ -142,10 +176,6 @@ class OtherTestCase(unittest.TestCase):
 
     def test_capitalize_on_empty(self):
         self.assertEqual(slugify('', capitalize=True), '')
-
-    def test_safe_chars(self):
-        filename_slugify = Slugify(safe_chars='-_.', separator='_')
-        self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_2.txt')
 
 
 class DeprecationTestCase(unittest.TestCase):
