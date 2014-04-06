@@ -8,9 +8,11 @@ from unidecode import unidecode
 # turn on PCRE version of regex module, incompatible with standard re module
 regex.DEFAULT_VERSION = regex.V1
 
-# for Python 2 support
-if sys.version_info > (3, 0):
-    unicode = str
+
+if sys.version_info[0] == 2:
+    TEXT_TYPE = unicode  # Python 2
+else:
+    TEXT_TYPE = str  # Python 3
 
 
 def join_words(words, separator, max_length=None):
@@ -128,8 +130,8 @@ class Slugify(object):
         max_length = kwargs.get('max_length', self.max_length)
         separator = kwargs.get('separator', self.separator)
 
-        if not isinstance(text, unicode):
-            text = unicode(text, 'utf8', 'ignore')
+        if not isinstance(text, TEXT_TYPE):
+            text = text.decode('utf8', 'ignore')
 
         if kwargs.get('to_lower', self.to_lower):
             text = text.lower()
@@ -147,10 +149,7 @@ class Slugify(object):
 
                 text_parts[position] = text_part
 
-            text = ''.join(text_parts)
-
-        # if not isinstance(text, unicode):
-        #     text = unicode(text, 'utf8', 'ignore')
+            text = u''.join(text_parts)
 
         words = self.sanitize(text)
         text = join_words(words, separator, max_length)
@@ -159,7 +158,6 @@ class Slugify(object):
             text = text[0].upper() + text[1:]
 
         return text
-
 
 # \p{SB=AT} = '.․﹒．'
 # \p{SB=ST} = '!?՜՞։؟۔܀܁܂߹।॥၊။።፧፨᙮᜵᜶‼‽⁇⁈⁉⸮。꓿꘎꘏꤯﹖﹗！？｡'
