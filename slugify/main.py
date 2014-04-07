@@ -1,12 +1,12 @@
 # coding=utf8
 
-import re
 import sys
-import regex
-from unidecode import unidecode
 
-# turn on PCRE version of regex module, incompatible with standard re module
-regex.DEFAULT_VERSION = regex.V1
+from unidecode import unidecode
+import regex as re
+
+
+re.DEFAULT_VERSION = re.V1  # Version 1 behaviour: nested sets and set operations are supported
 
 
 if sys.version_info[0] == 2:
@@ -60,7 +60,7 @@ UPPER_TO_UPPER_LETTERS_RE = \
 
 class Slugify(object):
 
-    upper_to_upper_letters_re = regex.compile(UPPER_TO_UPPER_LETTERS_RE, regex.UNICODE | regex.VERBOSE)
+    upper_to_upper_letters_re = re.compile(UPPER_TO_UPPER_LETTERS_RE, re.UNICODE | re.VERBOSE)
 
     def __init__(self, pretranslate=None, translate=unidecode, safe_chars='',
             to_lower=False, max_length=None, separator=u'-', capitalize=False):
@@ -114,8 +114,8 @@ class Slugify(object):
     translate = property(fset=set_translate)
 
     def set_safe_chars(self, safe_chars):
-        unwanted_chars_re = u'[^\p{{AlNum}}{safe_chars}]+'.format(safe_chars=regex.escape(safe_chars))
-        self.unwanted_chars_re = regex.compile(unwanted_chars_re, regex.UNICODE)
+        unwanted_chars_re = u'[^\p{{AlNum}}{safe_chars}]+'.format(safe_chars=re.escape(safe_chars))
+        self.unwanted_chars_re = re.compile(unwanted_chars_re, re.UNICODE)
         self.apostrophe_is_not_safe = "'" not in safe_chars
 
     safe_chars = property(fset=set_safe_chars)
@@ -127,13 +127,14 @@ class Slugify(object):
 
     def __call__(self, text, **kwargs):
 
+        to_lower = kwargs.get('to_lower', self.to_lower)
         max_length = kwargs.get('max_length', self.max_length)
         separator = kwargs.get('separator', self.separator)
 
         if not isinstance(text, TEXT_TYPE):
             text = text.decode('utf8', 'ignore')
 
-        if kwargs.get('to_lower', self.to_lower):
+        if to_lower:
             text = text.lower()
             text = self._pretranslate(text)
             text = self._translate(text)

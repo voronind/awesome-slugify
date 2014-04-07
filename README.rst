@@ -10,22 +10,23 @@ awesome-slugify
 
 Install
 ==========
-.. code:: bash
+.. code-block:: bash
 
     pip install awesome-slugify
-    
-Usage
-=================
 
-.. code:: python
+Usage
+======
+
+.. code-block:: python
 
     from slugify import slugify
     
     slugify(u'Any text')  # u'Any-text'
     
 slugify optional args
----------------
-.. code:: python
+------------------------
+
+.. code-block:: python
 
     to_lower              # if True convert text to lowercase
     max_length            # output string max length
@@ -34,7 +35,8 @@ slugify optional args
     
 Custom slugify
 ================
-.. code:: python
+
+.. code-block:: python
 
     from slugify import Slugify
     
@@ -58,6 +60,7 @@ Slugify args
 
 Examples
 ==========
+
 .. code-block:: python
 
     from slugify import slugify, slugify_unicode, slugify_ru

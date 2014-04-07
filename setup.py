@@ -2,9 +2,10 @@
 
 from setuptools import setup, find_packages
 
+
 setup(
     name='awesome-slugify',
-    version='1.3.2',
+    version='1.3.3',
 
     author='Dmitry Voronin',
     author_email='dimka665@gmail.com',
@@ -13,7 +14,7 @@ setup(
     description='Python flexible slugify function',
 
     packages=find_packages(),
-    install_requires=['regex', 'Unidecode'],
+    install_requires=['Unidecode', 'regex'],
 
     license='GNU GPLv3',
     classifiers=[
@@ -26,5 +27,5 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-    keywords='slugify alternative russian german translation flexible awesome',
+    keywords='slugify transliteration russian german unicode translation flexible',
 )

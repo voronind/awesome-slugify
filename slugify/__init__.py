@@ -1,12 +1,13 @@
 from slugify.main import Slugify
-from slugify.alt_translates import ALT_CYRILLIC, ALT_GERMAN
+from slugify.alt_translates import *
 
 
 slugify = Slugify()
 slugify_unicode = Slugify(translate=None)
 
-slugify_ru = Slugify(pretranslate=ALT_CYRILLIC)
-slugify_de = Slugify(pretranslate=ALT_GERMAN)
+slugify_ru = Slugify(pretranslate=CYRILLIC)
+slugify_de = Slugify(pretranslate=GERMAN)
+slugify_el = Slugify(pretranslate=GREEK)
 
 
 # Legacy code

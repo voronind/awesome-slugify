@@ -4,7 +4,8 @@ import unittest
 
 from slugify import Slugify
 from slugify import slugify, slugify_unicode
-from slugify import slugify_ru, slugify_de
+from slugify import slugify_ru, slugify_de, slugify_el
+
 from slugify import get_slugify
 
 
@@ -34,8 +35,11 @@ class SlugifyTestCase(unittest.TestCase):
     def test_slugify_ru(self):
         self.assertEqual(slugify_ru('Компьютер'), 'Komputer')
         self.assertEqual(slugify_ru('Транслитерирует и русский'), 'Transliteriryet-i-rysskii')
-        self.assertEqual(slugify_ru('ёжик из щуки сварил уху'), 'ejik-iz-schyki-svaril-yhy')
+        self.assertEqual(slugify_ru('ёжик из щуки сварил уху'), 'ezhik-iz-schyki-svaril-yhy')
         self.assertEqual(slugify_ru('Ах, Юля-Юля'), 'Ah-Ulya-Ulya')
+
+    def test_greek(self):
+        self.assertEqual(slugify_el('ϒ Ϋ υ ϋ ΰ'), 'Y-Y-y-y-y')
 
     def test_slugify_unicode(self):
         self.assertEqual(slugify_unicode('-=Слово по-русски=-'), u'Слово-по-русски')
@@ -132,6 +136,7 @@ class SanitizeTestCase(unittest.TestCase):
     def test_filename_slugify(self):
         filename_slugify = Slugify(safe_chars='-_.', separator='_')
         self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_2.txt')
+        # self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_No2.txt')
 
 
 class TruncateTestCase(unittest.TestCase):
@@ -167,7 +172,7 @@ class TruncateTestCase(unittest.TestCase):
 
 class OtherTestCase(unittest.TestCase):
 
-    def test_prevent_double_translation(self):
+    def test_prevent_double_pretranslation(self):
         slugify = Slugify(pretranslate={'s': 'ss'})
         self.assertEqual(slugify('BOOST'), 'BOOSST')
 
