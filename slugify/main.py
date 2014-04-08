@@ -122,7 +122,7 @@ class Slugify(object):
     safe_chars = property(fset=set_safe_chars)
 
     def set_stop_words(self, stop_words):
-        self._stop_words = stop_words
+        self._stop_words = tuple(stop_words)
         self.calc_unwanted_chars_re()
 
     stop_words = property(fset=set_stop_words)

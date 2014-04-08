@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='awesome-slugify',
-    version='1.3.3',
+    version='1.4',
 
     author='Dmitry Voronin',
     author_email='dimka665@gmail.com',
@@ -27,5 +27,5 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-    keywords='slugify transliteration russian german unicode translation flexible',
+    keywords='slugify slug transliteration russian german unicode translation flexible',
 )

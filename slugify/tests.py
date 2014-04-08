@@ -81,8 +81,8 @@ class UpperTestCase(unittest.TestCase):
 
     def test_camel_word(self):
         self.assertEqual(slugify_ru('Яндекс'), 'Yandeks')
-        self.assertEqual(slugify_ru('ВВЕРХ Яндекс'), 'VVERH-Yandeks')
-        self.assertEqual(slugify_ru('Яндекс ВВЕРХ'), 'Yandeks-VVERH')
+        self.assertEqual(slugify_ru('UP Яндекс'), 'UP-Yandeks')
+        self.assertEqual(slugify_ru('Яндекс UP'), 'Yandeks-UP')
 
     def test_part_of_word(self):
         self.assertEqual(slugify_de('ÜBERslugify'), 'UEBERslugify')
@@ -101,10 +101,10 @@ class UpperTestCase(unittest.TestCase):
 
     def test_one_letter_words(self):
         self.assertEqual(slugify_ru('Э Я Г Д Е ?'), 'E-Ya-G-D-E')
-        self.assertEqual(slugify_ru('ВВЕРХ Э Я Г Д Е ?'), 'VVERH-E-YA-G-D-E')
+        self.assertEqual(slugify_ru('UP Э Я Г Д Е ?'), 'UP-E-YA-G-D-E')
 
     def test_abbreviation(self):
-        self.assertEqual(slugify_ru('ВВЕРХ Я.Б.Ч'), 'VVERH-Ya-B-Ch')
+        self.assertEqual(slugify_ru('UP Я.Б.Ч'), 'UP-Ya-B-Ch')
 
 
 class PretranslateTestCase(unittest.TestCase):
@@ -160,6 +160,9 @@ class StopWordsTestCase(unittest.TestCase):
         slugify.safe_chars = '*'
         self.assertEqual(slugify('*The*red*apple'), '*-*red*apple')
         self.assertEqual(slugify('The**red*apple'), '**red*apple')
+
+        slugify.stop_words = ['x', 'y']
+        self.assertEqual(slugify('x y n'), 'n')
 
 class TruncateTestCase(unittest.TestCase):
 
