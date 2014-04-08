@@ -1,6 +1,8 @@
 .tox/
 .idea/
 
+.hgignore
+
 *.pyc
 *.pyo
 *.orig
