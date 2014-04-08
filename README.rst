@@ -67,11 +67,11 @@ Slugify class args
 Predefined slugify functions
 ==============================
 
-Some slugify functions predefined this way:
+Some slugify functions is predefined this way:
+
 .. code-block:: python
 
-    from slugify.main import Slugify
-    from slugify.alt_translates import *
+    from slugify import Slugify, CYRILLIC, GERMAN, GREEK
 
     slugify = Slugify()
     slugify_unicode = Slugify(translate=None)
@@ -95,23 +95,21 @@ Examples
 
 .. code-block:: python
 
-    from slugify import slugify, slugify_unicode, slugify_ru
-    from slugify import Slugify
-    
+    from slugify import *
     
     slugify('one kožušček')                       # one-kozuscek
     slugify('one two three', separator='.')       # one.two.three
     slugify('one two three four', max_length=12)  # one-two-four   (12 chars)
     slugify('one TWO', to_lower=True)             # one-two
     slugify('one TWO', capitalize=True)           # One-TWO
-
-    slugify('Я ♥ борщ')                           # Ia-borshch  (standard translation)
-    slugify_ru('Я ♥ борщ')                        # Ya-borsch   (alternative russian translation)
-    slugify_unicode('Я ♥ борщ')                   # Я-борщ      (sanitize only)
     
     slugify_filename(u'Дrаft №2.txt')             # Draft_2.txt
     slugify_url(u'Дrаft №2.txt')                  # draft-2-txt
+    
+    slugify('Я ♥ борщ')                           # Ia-borshch  (standard translation)
+    slugify_ru('Я ♥ борщ')                        # Ya-borsch   (alternative russian translation)
+    slugify_unicode('Я ♥ борщ')                   # Я-борщ      (sanitize only)
 
-    my_slugify = Slugify(pretranslate={'я': 'i', '♥': 'love', 'щ': 'sch'}, separator='.')
-    my_slugify('Я ♥ борщ')                        # I.love.borsch  (custom translate)
+    my_slugify = Slugify(pretranslate={'я': 'i', '♥': 'love'}, separator='.')
+    my_slugify('Я ♥ борщ')                        # I.love.borshch  (custom translate)
 
