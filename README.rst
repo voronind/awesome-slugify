@@ -95,7 +95,8 @@ Examples
 
 .. code-block:: python
 
-    from slugify import *
+    from slugify import Slugify, slugify, slugiry_ru, slugify_unicode
+    from slugify import slugify_url, slugify_filename
     
     slugify('one kožušček')                       # one-kozuscek
     slugify('one two three', separator='.')       # one.two.three
