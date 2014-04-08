@@ -95,8 +95,9 @@ Examples
 
 .. code-block:: python
 
-    from slugify import Slugify, slugify, slugiry_ru, slugify_unicode
+    from slugify import Slugify, slugify, slugify_unicode
     from slugify import slugify_url, slugify_filename
+    from slugify import slugify_ru, slugify_de
     
     slugify('one kožušček')                       # one-kozuscek
     slugify('one two three', separator='.')       # one.two.three
@@ -107,10 +108,14 @@ Examples
     slugify_filename(u'Дrаft №2.txt')             # Draft_2.txt
     slugify_url(u'Дrаft №2.txt')                  # draft-2-txt
     
+    my_slugify = Slugify()
+    my_slugify.separator = '.'
+    my_slugify.pretranslate = {'я': 'i', '♥': 'love'}
+    my_slugify('Я ♥ борщ')                        # I.love.borshch  (custom translate)
+    
     slugify('Я ♥ борщ')                           # Ia-borshch  (standard translation)
     slugify_ru('Я ♥ борщ')                        # Ya-borsch   (alternative russian translation)
     slugify_unicode('Я ♥ борщ')                   # Я-борщ      (sanitize only)
 
-    my_slugify = Slugify(pretranslate={'я': 'i', '♥': 'love'}, separator='.')
-    my_slugify('Я ♥ борщ')                        # I.love.borshch  (custom translate)
+    slugify_de('ÜBER Über slugify')               # UEBER-Ueber-slugify
 
