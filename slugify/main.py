@@ -34,7 +34,7 @@ def join_words(words, separator, max_length=None):
 
 # uppercase letters to translate to uppercase letters, NOT camelcase
 UPPER_TO_UPPER_LETTERS_RE = \
-    '''
+    u'''
     (
             \p{Uppercase_Letter} {2,}                          # 2 or more adjacent letters - UP always
         |
@@ -60,19 +60,22 @@ UPPER_TO_UPPER_LETTERS_RE = \
 
 class Slugify(object):
 
-    upper_to_upper_letters_re = re.compile(UPPER_TO_UPPER_LETTERS_RE, re.UNICODE | re.VERBOSE)
+    upper_to_upper_letters_re = re.compile(UPPER_TO_UPPER_LETTERS_RE, re.VERBOSE)
+    _safe_chars = ''
+    _stop_words = ()
 
-    def __init__(self, pretranslate=None, translate=unidecode, safe_chars='',
-            to_lower=False, max_length=None, separator=u'-', capitalize=False):
+    def __init__(self, pretranslate=None, translate=unidecode, safe_chars='', stop_words=(),
+                 to_lower=False, max_length=None, separator=u'-', capitalize=False):
+
+        self.pretranslate = pretranslate
+        self.translate = translate
+        self.safe_chars = safe_chars
+        self.stop_words = stop_words
 
         self.to_lower = to_lower
         self.max_length = max_length
         self.separator = separator
         self.capitalize = capitalize
-
-        self.pretranslate = pretranslate
-        self.translate = translate
-        self.safe_chars = safe_chars
 
     def pretranslate_dict_to_function(self, convert_dict):
 
@@ -83,9 +86,7 @@ class Slugify(object):
                 convert_dict[letter_upper] = translation.capitalize()
 
         self.convert_dict = convert_dict
-
-        PRETRANSLATE = u'({0})'.format('|'.join(map(re.escape, convert_dict)))
-        PRETRANSLATE = re.compile(PRETRANSLATE, re.UNICODE)
+        PRETRANSLATE = re.compile(u'(\L<options>)', options=convert_dict)
 
         # translate some letters before translating
         return lambda text: PRETRANSLATE.sub(lambda m: convert_dict[m.group(1)], text)
@@ -114,27 +115,41 @@ class Slugify(object):
     translate = property(fset=set_translate)
 
     def set_safe_chars(self, safe_chars):
-        unwanted_chars_re = u'[^\p{{AlNum}}{safe_chars}]+'.format(safe_chars=re.escape(safe_chars))
-        self.unwanted_chars_re = re.compile(unwanted_chars_re, re.UNICODE)
+        self._safe_chars = safe_chars
         self.apostrophe_is_not_safe = "'" not in safe_chars
+        self.calc_unwanted_chars_re()
 
     safe_chars = property(fset=set_safe_chars)
+
+    def set_stop_words(self, stop_words):
+        self._stop_words = stop_words
+        self.calc_unwanted_chars_re()
+
+    stop_words = property(fset=set_stop_words)
+
+    def calc_unwanted_chars_re(self):
+        sanitize_re = u'[^\p{{AlNum}}{safe_chars}]+'.format(safe_chars=re.escape(self._safe_chars or ''))
+
+        if self._stop_words:
+            sanitize_re += u'|(?<!\p{AlNum})(?:\L<stop_words>)(?!\p{AlNum})'
+            self.sanitize_re = re.compile(sanitize_re, re.IGNORECASE, stop_words=self._stop_words)
+        else:
+            self.sanitize_re = re.compile(sanitize_re)
 
     def sanitize(self, text):
         if self.apostrophe_is_not_safe:
             text = text.replace("'", '').strip()  # remove '
-        return filter(None, self.unwanted_chars_re.split(text))  # split by unwanted characters
+        return filter(None, self.sanitize_re.split(text))  # split by unwanted characters
 
     def __call__(self, text, **kwargs):
 
-        to_lower = kwargs.get('to_lower', self.to_lower)
         max_length = kwargs.get('max_length', self.max_length)
         separator = kwargs.get('separator', self.separator)
 
         if not isinstance(text, TEXT_TYPE):
             text = text.decode('utf8', 'ignore')
 
-        if to_lower:
+        if kwargs.get('to_lower', self.to_lower):
             text = text.lower()
             text = self._pretranslate(text)
             text = self._translate(text)

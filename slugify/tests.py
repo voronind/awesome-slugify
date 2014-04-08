@@ -4,6 +4,7 @@ import unittest
 
 from slugify import Slugify
 from slugify import slugify, slugify_unicode
+from slugify import slugify_url, slugify_filename
 from slugify import slugify_ru, slugify_de, slugify_el
 
 from slugify import get_slugify
@@ -38,12 +39,24 @@ class SlugifyTestCase(unittest.TestCase):
         self.assertEqual(slugify_ru('ёжик из щуки сварил уху'), 'ezhik-iz-schyki-svaril-yhy')
         self.assertEqual(slugify_ru('Ах, Юля-Юля'), 'Ah-Ulya-Ulya')
 
+    def test_slugify_de(self):
+        self.assertEqual(slugify_de('Öl und SÜD'), 'Oel-und-SUED')
+
     def test_greek(self):
         self.assertEqual(slugify_el('ϒ Ϋ υ ϋ ΰ'), 'Y-Y-y-y-y')
 
     def test_slugify_unicode(self):
         self.assertEqual(slugify_unicode('-=Слово по-русски=-'), u'Слово-по-русски')
         self.assertEqual(slugify_unicode('слово_по_русски'), u'слово-по-русски')
+
+
+class PredefinedSlugifyTestCase(unittest.TestCase):
+
+    def test_slugify_url(self):
+        self.assertEqual(slugify_url('The Über article'), 'uber-article')
+
+    def test_slugify_filename(self):
+        self.assertEqual(slugify_filename(u'Дrаft №2.txt'), u'Draft_2.txt')
 
 
 class ToLowerTestCase(unittest.TestCase):
@@ -133,11 +146,20 @@ class SanitizeTestCase(unittest.TestCase):
         slugify.safe_chars = "'"
         self.assertEqual(slugify('Конь-Огонь'), "Kon'-Ogon'")
 
-    def test_filename_slugify(self):
-        filename_slugify = Slugify(safe_chars='-_.', separator='_')
-        self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_2.txt')
-        # self.assertEqual(filename_slugify(u'Дrаft №2.txt'), u'Draft_No2.txt')
 
+class StopWordsTestCase(unittest.TestCase):
+    def test_stop_words(self):
+        slugify = Slugify(stop_words=['a', 'the'])
+
+        self.assertEqual(slugify('A red apple'), 'red-apple')
+        self.assertEqual(slugify('The4 red apple'), 'The4-red-apple')
+
+        self.assertEqual(slugify('_The_red_the-apple'), 'red-apple')
+        self.assertEqual(slugify('The__red_apple'), 'red-apple')
+
+        slugify.safe_chars = '*'
+        self.assertEqual(slugify('*The*red*apple'), '*-*red*apple')
+        self.assertEqual(slugify('The**red*apple'), '**red*apple')
 
 class TruncateTestCase(unittest.TestCase):
 

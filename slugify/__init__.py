@@ -5,6 +5,16 @@ from slugify.alt_translates import *
 slugify = Slugify()
 slugify_unicode = Slugify(translate=None)
 
+slugify_url = Slugify()
+slugify_url.to_lower = True
+slugify_url.stop_words = ('a', 'an', 'the')
+slugify_url.max_length = 200
+
+slugify_filename = Slugify()
+slugify_filename.separator = '_'
+slugify_filename.safe_chars = '-.'
+slugify_filename.max_length = 255
+
 slugify_ru = Slugify(pretranslate=CYRILLIC)
 slugify_de = Slugify(pretranslate=GERMAN)
 slugify_el = Slugify(pretranslate=GREEK)
