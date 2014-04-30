@@ -14,7 +14,10 @@ setup(
     description='Python flexible slugify function',
 
     packages=find_packages(),
-    install_requires=['Unidecode', 'regex'],
+    install_requires=[
+        'regex',
+        'Unidecode>=0.04.14,<0.05',
+    ],
 
     license='GNU GPLv3',
     classifiers=[
