@@ -47,6 +47,7 @@ slugify function optional args
     max_length            # output string max length
     separator             # separator string
     capitalize            # if True upper first letter
+    unique_id             # if True, return a unique text value from all previously returned with same parameter
 
 
 Slugify class args
@@ -58,11 +59,13 @@ Slugify class args
     translate = unidecode.unidecode   # function for slugifying or None
     safe_chars = ''                   # additional safe chars
     stop_words = ()                   # remove these words from slug
+    uids = []                         # initial unique ids
 
     to_lower = False                  # default to_lower value
     max_length = None                 # default max_length value
     separator = '-'                   # default separator value
     capitalize = False                # default capitalize value
+    unique_id = False                 # default unique_id value
 
 Predefined slugify functions
 ==============================
@@ -104,6 +107,9 @@ Examples
     slugify('one two three four', max_length=12)  # one-two-four   (12 chars)
     slugify('one TWO', to_lower=True)             # one-two
     slugify('one TWO', capitalize=True)           # One-TWO
+
+    slugify('one TWO', unique_id=True)            # One-TWO
+    slugify('one TWO', unique_id=True)            # One-TWO-1
     
     slugify_filename(u'Дrаft №2.txt')             # Draft_2.txt
     slugify_url(u'Дrаft №2.txt')                  # draft-2-txt

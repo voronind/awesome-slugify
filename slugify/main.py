@@ -65,7 +65,8 @@ class Slugify(object):
     _stop_words = ()
 
     def __init__(self, pretranslate=None, translate=unidecode, safe_chars='', stop_words=(),
-                 to_lower=False, max_length=None, separator=u'-', capitalize=False):
+                 to_lower=False, max_length=None, separator=u'-', capitalize=False,
+                 uids=[], unique_id=False):
 
         self.pretranslate = pretranslate
         self.translate = translate
@@ -76,6 +77,8 @@ class Slugify(object):
         self.max_length = max_length
         self.separator = separator
         self.capitalize = capitalize
+        self.unique_id = unique_id
+        self.uids = uids
 
     def pretranslate_dict_to_function(self, convert_dict):
 
@@ -145,6 +148,7 @@ class Slugify(object):
 
         max_length = kwargs.get('max_length', self.max_length)
         separator = kwargs.get('separator', self.separator)
+        unique_id = kwargs.get('unique_id', self.unique_id)
 
         if not isinstance(text, TEXT_TYPE):
             text = text.decode('utf8', 'ignore')
@@ -172,6 +176,15 @@ class Slugify(object):
 
         if text and kwargs.get('capitalize', self.capitalize):
             text = text[0].upper() + text[1:]
+
+        if unique_id:
+            count = 0
+            newtext = text
+            while newtext in self.uids:
+                count += 1
+                newtext = "%s%s%d" % (text, separator, count)
+            self.uids.append(newtext)
+            return newtext
 
         return text
 
