@@ -47,7 +47,7 @@ slugify function optional args
     max_length            # output string max length
     separator             # separator string
     capitalize            # if True upper first letter
-    unique_id             # if True, return a unique text value from all previously returned with same parameter
+    unique_id             # if True, return a unique text value, from all previously returned with this parameter
 
 
 Slugify class args
