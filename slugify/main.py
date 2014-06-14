@@ -150,10 +150,9 @@ class Slugify(object):
             text = text.decode('utf8', 'ignore')
 
         if kwargs.get('to_lower', self.to_lower):
-            text = text.lower()
             text = self._pretranslate(text)
             text = self._translate(text)
-
+            text = text.lower()
         else:
             text_parts = self.upper_to_upper_letters_re.split(text)
 
