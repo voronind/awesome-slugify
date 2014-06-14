@@ -74,6 +74,9 @@ class ToLowerTestCase(unittest.TestCase):
     def test_to_lower_with_capitalize(self):
         self.assertEqual(slugify('Test TO lower', to_lower=True, capitalize=True), 'Test-to-lower')
 
+    def test_to_lower_with_unicode(self):
+        self.assertEqual(slugify('自転車', to_lower=True), 'zi-zhuan-che')
+
 
 class UpperTestCase(unittest.TestCase):
     def test_full_upper(self):
