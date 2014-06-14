@@ -113,7 +113,7 @@ class UpperTestCase(unittest.TestCase):
 class PretranslateTestCase(unittest.TestCase):
 
     def test_pretranslate(self):
-        EMOJI_TRANSLATION= {
+        EMOJI_TRANSLATION = {
             u'ʘ‿ʘ': u'smiling',
             u'ಠ_ಠ': u'disapproval',
             u'♥‿♥': u'enamored',
