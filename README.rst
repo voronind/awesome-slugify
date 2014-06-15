@@ -1,6 +1,8 @@
 ====================
 awesome-slugify
 ====================
+.. image:: https://travis-ci.org/dimka665/awesome-slugify.svg?branch=master
+    :target: https://travis-ci.org/dimka665/awesome-slugify
 
 **Python flexible slugify function**
 
