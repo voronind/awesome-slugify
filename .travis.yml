@@ -10,3 +10,4 @@ install:
 
 script:
   - python slugify/tests.py
+
