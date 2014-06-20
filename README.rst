@@ -133,5 +133,5 @@ Examples
     slugify_de('ÜBER Über slugify')               # UEBER-Ueber-slugify
 
     my_slugify = UniqueSlugify(separator='_')
-    my_slugify('one TWO')            # One_TWO
-    my_slugify('one TWO')            # One_TWO_1
+    my_slugify('one TWO')                         # One_TWO
+    my_slugify('one TWO')                         # One_TWO_1
