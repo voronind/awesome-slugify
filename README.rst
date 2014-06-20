@@ -30,7 +30,7 @@ Custom slugify
 
 .. code-block:: python
 
-    from slugify import slugify, Slugify
+    from slugify import slugify, Slugify, UniqueSlugify
 
     slugify('Any text', to_lower=True)  # 'any-text'
 
@@ -39,6 +39,10 @@ Custom slugify
 
     custom_slugify.separator = '_'
     custom_slugify('Any text')          # 'any_text'
+
+    custom_slugify = UniqueSlugify()
+    custom_slugify('Any text')          # 'any-text'
+    custom_slugify('Any text')          # 'any-text-1'
 
 slugify function optional args
 --------------------------------
@@ -65,6 +69,13 @@ Slugify class args
     max_length = None                 # default max_length value
     separator = '-'                   # default separator value
     capitalize = False                # default capitalize value
+
+UniqueSlugify class args
+---------------------
+
+.. code-block:: python
+    all slugify class args +
+    uids = []                         # initial unique ids
 
 Predefined slugify functions
 ==============================
@@ -106,7 +117,7 @@ Examples
     slugify('one two three four', max_length=12)  # one-two-four   (12 chars)
     slugify('one TWO', to_lower=True)             # one-two
     slugify('one TWO', capitalize=True)           # One-TWO
-    
+
     slugify_filename(u'Дrаft №2.txt')             # Draft_2.txt
     slugify_url(u'Дrаft №2.txt')                  # draft-2-txt
     
@@ -121,3 +132,6 @@ Examples
 
     slugify_de('ÜBER Über slugify')               # UEBER-Ueber-slugify
 
+    my_slugify = UniqueSlugify(separator='_')
+    my_slugify('one TWO')                         # One_TWO
+    my_slugify('one TWO')                         # One_TWO_1

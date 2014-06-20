@@ -174,6 +174,30 @@ class Slugify(object):
 
         return text
 
+
+class UniqueSlugify(Slugify):
+    """
+        Manage unique slugified ids
+    """
+
+    def __init__(self, *args, **kwargs):
+        # don't declare uids in args to avoid problem if someone uses positional arguments on initialization
+        self.uids = kwargs.pop('uids', [])
+        super(UniqueSlugify, self).__init__(*args, **kwargs)
+
+    def __call__(self, text, **kwargs):
+        # get slugified text
+        text = super(UniqueSlugify, self).__call__(text, **kwargs)
+        count = 0
+        newtext = text
+        separator = kwargs.get('separator', self.separator)
+        while newtext in self.uids:
+            count += 1
+            newtext = "%s%s%d" % (text, separator, count)
+        self.uids.append(newtext)
+        return newtext
+
+
 # \p{SB=AT} = '.․﹒．'
 # \p{SB=ST} = '!?՜՞։؟۔܀܁܂߹।॥၊။።፧፨᙮᜵᜶‼‽⁇⁈⁉⸮。꓿꘎꘏꤯﹖﹗！？｡'
 # \p{Term}  = '!,.:;?;·։׃،؛؟۔܀܁܂܃܄܅܆܇܈܉܊܌߸߹।॥๚๛༈།༎༏༐༑༒၊။፡።፣፤፥፦፧፨᙭᙮᛫᛬᛭។៕៖៚‼‽⁇⁈⁉⸮、。꓾꓿꘍꘎꘏꤯﹐﹑﹒﹔﹕﹖﹗！，．：；？｡､'

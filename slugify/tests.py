@@ -2,8 +2,8 @@
 
 import unittest
 
-from slugify import Slugify
-from slugify import slugify, slugify_unicode
+from slugify import Slugify, UniqueSlugify
+from slugify import slugify, slugify_unicode, unique_slugify
 from slugify import slugify_url, slugify_filename
 from slugify import slugify_ru, slugify_de, slugify_el
 
@@ -22,7 +22,8 @@ class SlugifyTestCase(unittest.TestCase):
         self.assertEqual(slugify('C\'est déjà l\'été.'), 'Cest-deja-lete')
         self.assertEqual(slugify('jaja---lol-méméméoo--a'), 'jaja-lol-mememeoo-a')
         self.assertEqual(slugify('Nín hǎo. Wǒ shì zhōng guó rén'), 'Nin-hao-Wo-shi-zhong-guo-ren')
-        self.assertEqual(slugify('Programmes de publicité - Solutions d\'entreprise'), 'Programmes-de-publicite-Solutions-dentreprise')
+        self.assertEqual(slugify('Programmes de publicité - Solutions d\'entreprise'),
+                         'Programmes-de-publicite-Solutions-dentreprise')
 
     def test_slugify_chinese(self):
         self.assertEqual(slugify('北亰'), 'Bei-Jing')
@@ -167,6 +168,7 @@ class StopWordsTestCase(unittest.TestCase):
         slugify.stop_words = ['x', 'y']
         self.assertEqual(slugify('x y n'), 'n')
 
+
 class TruncateTestCase(unittest.TestCase):
 
     def test_truncate(self):
@@ -209,6 +211,34 @@ class OtherTestCase(unittest.TestCase):
 
     def test_capitalize_on_empty(self):
         self.assertEqual(slugify('', capitalize=True), '')
+
+
+class UniqueTestCase(unittest.TestCase):
+
+    def test_unique_slugify(self):
+        self.assertEqual(unique_slugify('This % is a test ---'), 'This-is-a-test')
+        self.assertEqual(unique_slugify('- - -This -- is a ## test ---'), 'This-is-a-test-1')
+        self.assertEqual(unique_slugify('_this_is_a__test___'), 'this-is-a-test')
+
+    def test_unique(self):
+        slugify = UniqueSlugify()
+        self.assertEqual(slugify('This % is another test ---'), 'This-is-another-test')
+        self.assertEqual(slugify('- - -This -- is another ## test ---'), 'This-is-another-test-1')
+
+    def test_init_uids(self):
+        slugify = UniqueSlugify(uids=['This-is-my-test', 'This-is-another-test'])
+        self.assertEqual(slugify('This % is a test ---'), 'This-is-a-test')
+        self.assertEqual(slugify('This % is my test ---'), 'This-is-my-test-1')
+
+    def test_init_other(self):
+        slugify = UniqueSlugify(separator=u'_')
+        self.assertEqual(slugify('This % is another test ---'), 'This_is_another_test')
+        self.assertEqual(slugify('- - -This -- is another ## test ---'), 'This_is_another_test_1')
+
+    def test_unique_other(self):
+        slugify = UniqueSlugify()
+        self.assertEqual(slugify('This % is another test ---', separator='_'), 'This_is_another_test')
+        self.assertEqual(slugify('- - -This -- is another ## test ---', separator='_'), 'This_is_another_test_1')
 
 
 class DeprecationTestCase(unittest.TestCase):
