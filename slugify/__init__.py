@@ -1,8 +1,9 @@
-from slugify.main import Slugify
+from slugify.main import Slugify, UniqueSlugify
 from slugify.alt_translates import *
 
 
 slugify = Slugify()
+unique_slugify = UniqueSlugify()
 slugify_unicode = Slugify(translate=None)
 
 slugify_url = Slugify()

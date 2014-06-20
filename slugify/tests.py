@@ -2,8 +2,8 @@
 
 import unittest
 
-from slugify import Slugify
-from slugify import slugify, slugify_unicode
+from slugify import Slugify, UniqueSlugify
+from slugify import slugify, slugify_unicode, unique_slugify
 from slugify import slugify_url, slugify_filename
 from slugify import slugify_ru, slugify_de, slugify_el
 
@@ -215,20 +215,30 @@ class OtherTestCase(unittest.TestCase):
 
 class UniqueTestCase(unittest.TestCase):
 
-    def test_unique(self):
-        self.assertEqual(slugify('This % is a test ---', unique_id=True), 'This-is-a-test')
-        self.assertEqual(slugify('- - -This -- is a ## test ---', unique_id=True), 'This-is-a-test-1')
-        self.assertEqual(slugify('_this_is_a__test___', unique_id=True), 'this-is-a-test')
+    def test_unique_slugify(self):
+        self.assertEqual(unique_slugify('This % is a test ---'), 'This-is-a-test')
+        self.assertEqual(unique_slugify('- - -This -- is a ## test ---'), 'This-is-a-test-1')
+        self.assertEqual(unique_slugify('_this_is_a__test___'), 'this-is-a-test')
 
-    def test_init_unique(self):
-        slugify = Slugify(unique_id=True)
+    def test_unique(self):
+        slugify = UniqueSlugify()
         self.assertEqual(slugify('This % is another test ---'), 'This-is-another-test')
         self.assertEqual(slugify('- - -This -- is another ## test ---'), 'This-is-another-test-1')
 
     def test_init_uids(self):
-        slugify = Slugify(unique_id=True, uids=['This-is-my-test', 'This-is-another-test'])
+        slugify = UniqueSlugify(uids=['This-is-my-test', 'This-is-another-test'])
         self.assertEqual(slugify('This % is a test ---'), 'This-is-a-test')
         self.assertEqual(slugify('This % is my test ---'), 'This-is-my-test-1')
+
+    def test_init_other(self):
+        slugify = UniqueSlugify(separator=u'_')
+        self.assertEqual(slugify('This % is another test ---'), 'This_is_another_test')
+        self.assertEqual(slugify('- - -This -- is another ## test ---'), 'This_is_another_test_1')
+
+    def test_unique_other(self):
+        slugify = UniqueSlugify()
+        self.assertEqual(slugify('This % is another test ---', separator='_'), 'This_is_another_test')
+        self.assertEqual(slugify('- - -This -- is another ## test ---', separator='_'), 'This_is_another_test_1')
 
 
 class DeprecationTestCase(unittest.TestCase):
