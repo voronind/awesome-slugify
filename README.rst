@@ -1,6 +1,6 @@
-====================
+=================
 awesome-slugify
-====================
+=================
 .. image:: https://travis-ci.org/dimka665/awesome-slugify.svg?branch=master
     :target: https://travis-ci.org/dimka665/awesome-slugify
 
@@ -11,13 +11,13 @@ awesome-slugify
 
 
 Install
-==========
+=========
 .. code-block:: bash
 
     pip install awesome-slugify
 
 Usage
-======
+=======
 
 .. code-block:: python
 
@@ -56,7 +56,7 @@ slugify function optional args
 
 
 Slugify class args
----------------------
+--------------------
 
 .. code-block:: python
 
@@ -71,7 +71,7 @@ Slugify class args
     capitalize = False                # default capitalize value
 
 UniqueSlugify class args
----------------------
+--------------------------
 
 .. code-block:: python
     all slugify class args +
