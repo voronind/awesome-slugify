@@ -1,6 +1,6 @@
-=================
+===============
 awesome-slugify
-=================
+===============
 .. image:: https://travis-ci.org/dimka665/awesome-slugify.svg?branch=master
     :target: https://travis-ci.org/dimka665/awesome-slugify
 
@@ -11,13 +11,13 @@ awesome-slugify
 
 
 Install
-=========
+=======
 .. code-block:: bash
 
     pip install awesome-slugify
 
 Usage
-=======
+=====
 
 .. code-block:: python
 
@@ -26,7 +26,7 @@ Usage
     slugify('Any text')  # 'Any-text'
     
 Custom slugify
-================
+==============
 
 .. code-block:: python
 
@@ -45,7 +45,7 @@ Custom slugify
     custom_slugify('Any text')          # 'any-text-1'
 
 slugify function optional args
---------------------------------
+------------------------------
 
 .. code-block:: python
 
@@ -56,7 +56,7 @@ slugify function optional args
 
 
 Slugify class args
---------------------
+------------------
 
 .. code-block:: python
 
@@ -71,14 +71,15 @@ Slugify class args
     capitalize = False                # default capitalize value
 
 UniqueSlugify class args
---------------------------
+------------------------
 
 .. code-block:: python
-    all slugify class args +
+
+    # all Slugify class args +
     uids = []                         # initial unique ids
 
 Predefined slugify functions
-==============================
+============================
 
 Some slugify functions is predefined this way:
 
@@ -104,7 +105,7 @@ Some slugify functions is predefined this way:
     slugify_el = Slugify(pretranslate=GREEK)
 
 Examples
-==========
+========
 
 .. code-block:: python
 
@@ -132,6 +133,6 @@ Examples
 
     slugify_de('ÜBER Über slugify')               # UEBER-Ueber-slugify
 
-    my_slugify = UniqueSlugify(separator='_')
-    my_slugify('one TWO')                         # One_TWO
-    my_slugify('one TWO')                         # One_TWO_1
+    slugify_unique = UniqueSlugify(separator='_')
+    slugify_unique('one TWO')                     # One_TWO
+    slugify_unique('one TWO')                     # One_TWO_1
