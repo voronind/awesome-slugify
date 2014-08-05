@@ -16,6 +16,9 @@ else:
 
 
 def join_words(words, separator, max_length=None):
+    """
+    words - iterator or list
+    """
 
     if not max_length:
         return separator.join(words)
@@ -128,18 +131,26 @@ class Slugify(object):
     stop_words = property(fset=set_stop_words)
 
     def calc_unwanted_chars_re(self):
-        sanitize_re = u'[^\p{{AlNum}}{safe_chars}]+'.format(safe_chars=re.escape(self._safe_chars or ''))
+        unwanted_chars_re = u'[^\p{{AlNum}}{safe_chars}]+'.format(safe_chars=re.escape(self._safe_chars or ''))
+        self.unwanted_chars_re = re.compile(unwanted_chars_re, re.IGNORECASE)
 
         if self._stop_words:
-            sanitize_re += u'|(?<!\p{AlNum})(?:\L<stop_words>)(?!\p{AlNum})'
-            self.sanitize_re = re.compile(sanitize_re, re.IGNORECASE, stop_words=self._stop_words)
+            unwanted_chars_and_words_re = unwanted_chars_re + u'|(?<!\p{AlNum})(?:\L<stop_words>)(?!\p{AlNum})'
+            self.unwanted_chars_and_words_re = re.compile(unwanted_chars_and_words_re, re.IGNORECASE, stop_words=self._stop_words)
         else:
-            self.sanitize_re = re.compile(sanitize_re)
+            self.unwanted_chars_and_words_re = None
 
     def sanitize(self, text):
         if self.apostrophe_is_not_safe:
             text = text.replace("'", '').strip()  # remove '
-        return filter(None, self.sanitize_re.split(text))  # split by unwanted characters
+
+        if self.unwanted_chars_and_words_re:
+            words = [word for word in self.unwanted_chars_and_words_re.split(text) if word]
+            if words:
+                return words
+
+        words = filter(None, self.unwanted_chars_re.split(text))
+        return words
 
     def __call__(self, text, **kwargs):
 
@@ -177,7 +188,7 @@ class Slugify(object):
 
 class UniqueSlugify(Slugify):
     """
-        Manage unique slugified ids
+    Manage unique slugified ids
     """
 
     def __init__(self, *args, **kwargs):

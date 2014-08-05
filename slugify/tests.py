@@ -168,6 +168,11 @@ class StopWordsTestCase(unittest.TestCase):
         slugify.stop_words = ['x', 'y']
         self.assertEqual(slugify('x y n'), 'n')
 
+    def test_only_stop_words_text(self):
+        slugify = Slugify(stop_words=['a', 'the'])
+
+        self.assertEqual(slugify('The A'), 'The-A')
+
 
 class TruncateTestCase(unittest.TestCase):
 
