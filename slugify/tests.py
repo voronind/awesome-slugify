@@ -250,6 +250,17 @@ class UniqueTestCase(unittest.TestCase):
         self.assertEqual(slugify('This % is another test ---', separator='_'), 'This_is_another_test')
         self.assertEqual(slugify('- - -This -- is another ## test ---', separator='_'), 'This_is_another_test_1')
 
+    def test_is_unique_override(self):
+        def my_unique_check(text, uids):
+            return len(text) > 3 and text not in uids
+
+        slugify = UniqueSlugify(unique_check=my_unique_check)
+
+        self.assertEqual(slugify('te occidere possunt'), 'te-occidere-possunt')
+        self.assertEqual(slugify('te occidere possunt'), 'te-occidere-possunt-1')
+        self.assertEqual(slugify('boo'), 'boo-1')
+        self.assertEqual(slugify('boo'), 'boo-2')
+
 
 class DeprecationTestCase(unittest.TestCase):
 

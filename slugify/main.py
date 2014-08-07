@@ -196,6 +196,10 @@ class UniqueSlugify(Slugify):
         self.uids = kwargs.pop('uids', set())
         if isinstance(self.uids, list):
             self.uids = set(self.uids)
+        self.unique_check = kwargs.pop(
+            "unique_check",
+            lambda text, uids: self.default_unique_check(text, uids)
+        )
         super(UniqueSlugify, self).__init__(*args, **kwargs)
 
     def __call__(self, text, **kwargs):
@@ -204,12 +208,14 @@ class UniqueSlugify(Slugify):
         count = 0
         newtext = text
         separator = kwargs.get('separator', self.separator)
-        while newtext in self.uids:
+        while not self.unique_check(newtext, self.uids):
             count += 1
             newtext = "%s%s%d" % (text, separator, count)
         self.uids.add(newtext)
         return newtext
 
+    def default_unique_check(self, text, uids):
+        return text not in uids
 
 # \p{SB=AT} = '.․﹒．'
 # \p{SB=ST} = '!?՜՞։؟۔܀܁܂߹।॥၊။።፧፨᙮᜵᜶‼‽⁇⁈⁉⸮。꓿꘎꘏꤯﹖﹗！？｡'
