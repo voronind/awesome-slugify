@@ -145,6 +145,7 @@ Custom Unique Slugify Checker
 =============================
 
 .. code-block:: python
+
     from slugify import UniqueSlugify
 
     def my_unique_check(text, uids):
@@ -156,3 +157,13 @@ Custom Unique Slugify Checker
 
     # Checks the database for a matching document
     custom_slugify_unique('te occidere possunt')
+
+
+Running UnitTests
+=================
+
+.. code-block:: bash
+
+    $ virtualenv venv
+    $ venv/bin/pip install -r requirements.txt
+    $ venv/bin/nosetests slugify

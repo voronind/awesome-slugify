@@ -1,2 +1,3 @@
 regex
 Unidecode>=0.04.14,<0.05
+nose
