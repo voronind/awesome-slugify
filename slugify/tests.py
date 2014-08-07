@@ -234,6 +234,11 @@ class UniqueTestCase(unittest.TestCase):
         slugify = UniqueSlugify(uids=['This-is-my-test', 'This-is-another-test'])
         self.assertEqual(slugify('This % is a test ---'), 'This-is-a-test')
         self.assertEqual(slugify('This % is my test ---'), 'This-is-my-test-1')
+        self.assertTrue(isinstance(slugify.uids, set))
+
+        slugify = UniqueSlugify(uids=set(["let-me-not", "to-the-marriage", "of-true-minds"]))
+        self.assertEqual(slugify("of-true-minds"), "of-true-minds-1")
+        self.assertEqual(slugify("of-true-minds"), "of-true-minds-2")
 
     def test_init_other(self):
         slugify = UniqueSlugify(separator=u'_')
