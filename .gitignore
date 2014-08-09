@@ -11,3 +11,7 @@
 
 build/
 dist/
+
+# Common virtualenv names
+virtualenv
+venv

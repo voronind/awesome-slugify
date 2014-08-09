@@ -22,9 +22,9 @@ Usage
 .. code-block:: python
 
     from slugify import slugify
-    
+
     slugify('Any text')  # 'Any-text'
-    
+
 Custom slugify
 ==============
 
@@ -109,10 +109,10 @@ Examples
 
 .. code-block:: python
 
-    from slugify import Slugify, slugify, slugify_unicode
+    from slugify import Slugify, UniqueSlugify, slugify, slugify_unicode
     from slugify import slugify_url, slugify_filename
     from slugify import slugify_ru, slugify_de
-    
+
     slugify('one kožušček')                       # one-kozuscek
     slugify('one two three', separator='.')       # one.two.three
     slugify('one two three four', max_length=12)  # one-two-four   (12 chars)
@@ -121,12 +121,12 @@ Examples
 
     slugify_filename(u'Дrаft №2.txt')             # Draft_2.txt
     slugify_url(u'Дrаft №2.txt')                  # draft-2-txt
-    
+
     my_slugify = Slugify()
     my_slugify.separator = '.'
     my_slugify.pretranslate = {'я': 'i', '♥': 'love'}
     my_slugify('Я ♥ борщ')                        # I.love.borshch  (custom translate)
-    
+
     slugify('Я ♥ борщ')                           # Ia-borshch  (standard translation)
     slugify_ru('Я ♥ борщ')                        # Ya-borsch   (alternative russian translation)
     slugify_unicode('Я ♥ борщ')                   # Я-борщ      (sanitize only)
@@ -136,3 +136,34 @@ Examples
     slugify_unique = UniqueSlugify(separator='_')
     slugify_unique('one TWO')                     # One_TWO
     slugify_unique('one TWO')                     # One_TWO_1
+
+    slugify_unique = UniqueSlugify(uids=['cellar-door'])
+    slugify_unique('cellar door')                 # cellar-door-1
+
+
+Custom Unique Slugify Checker
+=============================
+
+.. code-block:: python
+
+    from slugify import UniqueSlugify
+
+    def my_unique_check(text, uids):
+        if text in uids:
+            return False
+        return not SomeDBClass.objects.filter(slug_field=text).exists()
+
+    custom_slugify_unique = UniqueSlugify(unique_check=my_unique_check)
+
+    # Checks the database for a matching document
+    custom_slugify_unique('te occidere possunt')
+
+
+Running UnitTests
+=================
+
+.. code-block:: bash
+
+    $ virtualenv venv
+    $ venv/bin/pip install -r requirements.txt
+    $ venv/bin/nosetests slugify
