@@ -6,7 +6,11 @@ from unidecode import unidecode
 import regex as re
 
 
-re.DEFAULT_VERSION = re.V1  # Version 1 behaviour: nested sets and set operations are supported
+# Don't set regex.DEFAULT_VERSION to regex.VERSION1 cause
+# this option will influence on 3rd party libs. E.g. `mailgun` and `flanker`.
+# Use regex.VERSION1 regex flag.
+
+# re.VERSION1 - New enhanced behaviour with nested sets and set operations
 
 
 if sys.version_info[0] == 2:
@@ -63,7 +67,7 @@ UPPER_TO_UPPER_LETTERS_RE = \
 
 class Slugify(object):
 
-    upper_to_upper_letters_re = re.compile(UPPER_TO_UPPER_LETTERS_RE, re.VERBOSE)
+    upper_to_upper_letters_re = re.compile(UPPER_TO_UPPER_LETTERS_RE, re.VERBOSE | re.VERSION1)
     _safe_chars = ''
     _stop_words = ()
 
