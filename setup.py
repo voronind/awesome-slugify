@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='awesome-slugify',
-    version='1.6',
+    version='1.6.1',
 
     author='Dmitry Voronin',
     author_email='dimka665@gmail.com',

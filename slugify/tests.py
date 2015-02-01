@@ -205,6 +205,15 @@ class TruncateTestCase(unittest.TestCase):
         self.assertEqual(slugify('one two three four', max_length=14, separator='...'), 'one...two')
 
 
+class FoldAbbreviationTestCase(unittest.TestCase):
+    def test_not_fold_abbr(self):
+        slugify = Slugify(fold_abbrs=False)
+        self.assertEqual('Back-in-U-S-S-R', slugify('Back in U.S.S.R.'))
+
+    def test_fold_abbr(self):
+        slugify = Slugify(fold_abbrs=True)
+        self.assertEqual('Back-in-USSR', slugify('Back in U.S.S.R.'))
+
 class OtherTestCase(unittest.TestCase):
 
     def test_prevent_double_pretranslation(self):

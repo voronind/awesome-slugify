@@ -14,9 +14,9 @@ import regex as re
 
 
 if sys.version_info[0] == 2:
-    TEXT_TYPE = unicode  # Python 2
+    str_type = unicode  # Python 2
 else:
-    TEXT_TYPE = str  # Python 3
+    str_type = str  # Python 3
 
 
 def join_words(words, separator, max_length=None):
@@ -72,7 +72,8 @@ class Slugify(object):
     _stop_words = ()
 
     def __init__(self, pretranslate=None, translate=unidecode, safe_chars='', stop_words=(),
-                 to_lower=False, max_length=None, separator=u'-', capitalize=False):
+                 to_lower=False, max_length=None, separator=u'-', capitalize=False,
+                 fold_abbrs=False):
 
         self.pretranslate = pretranslate
         self.translate = translate
@@ -83,6 +84,7 @@ class Slugify(object):
         self.max_length = max_length
         self.separator = separator
         self.capitalize = capitalize
+        self.fold_abbrs = fold_abbrs
 
     def pretranslate_dict_to_function(self, convert_dict):
 
@@ -161,8 +163,11 @@ class Slugify(object):
         max_length = kwargs.get('max_length', self.max_length)
         separator = kwargs.get('separator', self.separator)
 
-        if not isinstance(text, TEXT_TYPE):
+        if not isinstance(text, str_type):
             text = text.decode('utf8', 'ignore')
+
+        if self.fold_abbrs:
+            text = re.sub(text, lambda x: x.group(0).replace('.', ''), text)
 
         if kwargs.get('to_lower', self.to_lower):
             text = self._pretranslate(text)
