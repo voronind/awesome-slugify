@@ -2,6 +2,9 @@ from slugify.main import Slugify, UniqueSlugify
 from slugify.alt_translates import *
 
 
+version = '1.6.3'
+
+
 slugify = Slugify()
 unique_slugify = UniqueSlugify()
 slugify_unicode = Slugify(translate=None)
