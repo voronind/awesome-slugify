@@ -213,10 +213,23 @@ class FoldAbbreviationTestCase(unittest.TestCase):
     def test_fold_abbr(self):
         slugify = Slugify(fold_abbrs=True)
         self.assertEqual('Back-in-USSR', slugify('Back in U.S.S.R.'))
+        self.assertEqual('Back-in-USSR', slugify('Back in U.S.S.R'))
 
     def test_fold_abbr_2(self):
         slugify = Slugify(fold_abbrs=True)
         self.assertEqual('Back-in-USSR-Text', slugify('Back in U.S.S.R. () Text'))
+
+    def test_fold_abbr_3(self):
+        slugify = Slugify(fold_abbrs=True)
+        self.assertEqual('Back-in-USSR-Text', slugify('Back in U.S.S.R. () Text'))
+
+    def test_fold_abbr_4(self):
+        slugify = Slugify(fold_abbrs=True)
+        self.assertEqual('mind-in-a-box', slugify('mind.in.a.box'))
+        self.assertEqual('mind-in-a-b-c-box', slugify('mind.in.a.b.c.box'))
+        self.assertEqual('a-b-c-box', slugify('.a.b.c.box'))
+        self.assertEqual('abcbox', slugify('a.b.c.box'))
+        self.assertEqual('abcb-ox', slugify('a.b.c.b ox'))
 
 class OtherTestCase(unittest.TestCase):
 
