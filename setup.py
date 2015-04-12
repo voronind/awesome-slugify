@@ -2,12 +2,10 @@
 
 from setuptools import setup, find_packages
 
-from slugify import version
-
 
 setup(
     name='awesome-slugify',
-    version=version,
+    version='1.6.4',
 
     author='Dmitry Voronin',
     author_email='dimka665@gmail.com',

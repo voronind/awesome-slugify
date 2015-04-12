@@ -1,8 +1,6 @@
+
 from slugify.main import Slugify, UniqueSlugify
 from slugify.alt_translates import *
-
-
-version = '1.6.3'
 
 
 slugify = Slugify()
