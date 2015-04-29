@@ -134,7 +134,7 @@ class PretranslateTestCase(unittest.TestCase):
         self.assertEqual(slugify_reverse('slug'), 'guls')
 
     def test_wrong_argument_type(self):
-        self.assertRaises(ValueError, lambda: Slugify(pretranslate={1, 2}))
+        self.assertRaises(ValueError, lambda: Slugify(pretranslate=set([1, 2])))
 
 
 class SanitizeTestCase(unittest.TestCase):
@@ -298,7 +298,7 @@ class DeprecationTestCase(unittest.TestCase):
 
             slugify = get_slugify()
             self.assertEqual(slugify('This % is a test ---'), 'This-is-a-test')
-            self.assertIn("'slugify.get_slugify' is deprecated", str(warning[-1].message))
+            self.assertTrue("'slugify.get_slugify' is deprecated" in str(warning[-1].message))
 
 
 if __name__ == '__main__':
