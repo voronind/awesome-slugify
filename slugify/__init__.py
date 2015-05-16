@@ -1,6 +1,6 @@
 
-from slugify.main import Slugify, UniqueSlugify
-from slugify.alt_translates import *
+from .main import Slugify, UniqueSlugify
+from .alt_translates import *
 
 
 slugify = Slugify()
