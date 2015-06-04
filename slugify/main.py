@@ -166,7 +166,7 @@ class Slugify(object):
         if not isinstance(text, str_type):
             text = text.decode('utf8', 'ignore')
 
-        if self.fold_abbrs:
+        if kwargs.get('fold_abbrs', self.fold_abbrs):
             text = re.sub(r'(?<![\p{Letter}.])((?:\p{Letter}\.){2,})', lambda x: x.group(0).replace('.', ''), text)
 
         if kwargs.get('to_lower', self.to_lower):

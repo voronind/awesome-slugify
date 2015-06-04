@@ -215,6 +215,9 @@ class FoldAbbreviationTestCase(unittest.TestCase):
         self.assertEqual('Back-in-USSR', slugify('Back in U.S.S.R.'))
         self.assertEqual('Back-in-USSR', slugify('Back in U.S.S.R'))
 
+    def test_fold_abbr_1(self):
+        self.assertEqual('Back-in-USSR-Text', slugify('Back in U.S.S.R. () Text', fold_abbrs=True))
+
     def test_fold_abbr_2(self):
         slugify = Slugify(fold_abbrs=True)
         self.assertEqual('Back-in-USSR-Text', slugify('Back in U.S.S.R. () Text'))
