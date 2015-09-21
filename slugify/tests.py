@@ -51,6 +51,18 @@ class SlugifyTestCase(unittest.TestCase):
         self.assertEqual(slugify_unicode('слово_по_русски'), u'слово-по-русски')
 
 
+class NumericTestCase(unittest.TestCase):
+
+    def test_mixed_alphanumeric(self):
+        self.assertEqual(slugify('5 neat tricks'), '5-neat-tricks')
+        self.assertEqual(slugify('these 20 heroes'), 'these-20-heroes')
+        self.assertEqual(slugify('building 42'), 'building-42')
+
+    def test_numeric(self):
+        self.assertEqual(slugify('404'), '404')
+        self.assertEqual(slugify('1'), '1')
+
+
 class PredefinedSlugifyTestCase(unittest.TestCase):
 
     def test_slugify_url(self):
